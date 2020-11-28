@@ -1,51 +1,58 @@
 const fs = require("fs");
-const express = require('express');
+const express = require("express");
 const app = express();
-const url = require('url');
-const path = require('path');
-
+const url = require("url");
+const path = require("path");
+const mysql = require("mysql");
+const con = mysql.createConnection({
+  host: "localhost",
+  port: 3306,
+  user: "ulloc_user",
+  password: "Iamroot22",
+  database: "ulloc_covidtestingdb",
+});
 
 app.get("/", (req, res) => {
-    writeMainPage(req, res);
-})
+  writeMainPage(req, res);
+});
 
-app.get('/labtech', (req, res) => {
-    writeLoginPage(req, res);
-})
+app.get("/labtech/", (req, res) => {
+  writeLoginPage(req, res);
+});
 
-app.get('/employee', (req, res) => {
-    writeEmployeeLoginPage(req, res);
-})
+app.get("/employee", (req, res) => {
+  writeEmployeeLoginPage(req, res);
+});
 
-app.get('/employee/results', (req, res) => {
-    writeEmployeeResults(req, res);
-})
+app.get("/employee/results", (req, res) => {
+  writeEmployeeResults(req, res);
+});
 
-app.get('/labtech/testCollection', (req, res) => {
-    writeTestCollection(req, res);
-})
+app.get("/labtech/testCollection", (req, res) => {
+  writeTestCollection(req, res);
+});
 
-app.get('/labtech/labHome', (req, res) => {
-    writeLabHome(req, res);
-})
+app.get("/labtech/labHome", (req, res) => {
+  writeLabHome(req, res);
+});
 
-app.get('/labtech/poolMapping', (req, res) => {
-    writePoolMapping(req, res);
-})
+app.get("/labtech/poolMapping", (req, res) => {
+  writePoolMapping(req, res);
+});
 
-app.get('/labtech/wellTesting', (req, res) => {
-    writeWellTesting(req, res);
-})
+app.get("/labtech/wellTesting", (req, res) => {
+  writeWellTesting(req, res);
+});
 
 port = process.env.PORT || 3000;
 app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`)
-})
+  console.log(`Example app listening at http://localhost:${port}`);
+});
 
 function writeMainPage(req, res) {
-    res.writeHead(200, { "Content-Type": "text/html" })
-    let query = url.parse(req.url, true).query;
-    let html = `<!DOCTYPE html>
+  res.writeHead(200, { "Content-Type": "text/html" });
+  let query = url.parse(req.url, true).query;
+  let html = `<!DOCTYPE html>
     <html><!DOCTYPE html>
     <head>
         <style>
@@ -57,24 +64,28 @@ function writeMainPage(req, res) {
         <button onclick="location.href='/labtech'">Lab Tech Login Page</button>
         <button onclick="location.href='/employee'">Employee Login Page</button>
     </body>
-    </html>`
-    res.write(html);
-    res.end();
+    </html>`;
+  res.write(html);
+  res.end();
 }
+
 function writeLoginPage(req, res) {
-    res.writeHead(200, { "Content-Type": "text/html" })
-    let query = url.parse(req.url, true).query;
-    let html = `<!DOCTYPE html>
+  res.writeHead(200, { "Content-Type": "text/html" });
+  let query = url.parse(req.url, true).query;
+  let html = `<!DOCTYPE html>
     <html>
+    
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <style>
-            h2{
+            h2 {
                 text-align: center;
             }
+    
             body {
                 font-family: Arial, Helvetica, sans-serif;
             }
+    
             /* Full-width input fields */
             input[type=text],
             input[type=password] {
@@ -85,6 +96,7 @@ function writeLoginPage(req, res) {
                 box-sizing: border-box;
                 align-items: center;
             }
+    
             /* Set a style for all buttons */
             button {
                 background-color: white;
@@ -100,27 +112,33 @@ function writeLoginPage(req, res) {
     
     <body>
         <h2>Login Page</h2>
-        <div class="container" align = "center">
+        <div class="container">
             <label for="uname" style="font-size: 20px;"><b>&emsp;Email: &emsp;&emsp;</b></label>
-            <input type="text" name="uname" required><br>
+            <input type="text" id="email" name="uname" required><br>
     
             <label for="psw" style="font-size: 20px;"><b>Password: &emsp;</b></label>
-            <input type="password" name="psw" required><br>
+            <input type="password" id="password" name="psw" required><br>
     
-            <button type="button"><b>Login Collector</b></button>
-            <button type="button"><b>Lab Login</b></button>
+            <button type="button" onclick= "onLoginCollectorClick()"><b>Login Collector</b></button>
+            <button type="button" onclick="location.href='/labtech/labHome'"><b>Lab Login</b></button>
         </div>
+        <script>
+            function onLoginCollectorClick() {
+                location.href = '/labtech/testCollection?email=' + document.querySelector("#email").value + '&password=' + document.querySelector("#password").value;
+            }
+        </script>
     </body>
+    
     </html>
-    `
-    res.write(html);
-    res.end();
+    `;
+  res.write(html);
+  res.end();
 }
 
 function writeEmployeeLoginPage(req, res) {
-    res.writeHead(200, { "Content-Type": "text/html" })
-    let query = url.parse(req.url, true).query;
-    let html = `<!DOCTYPE html>
+  res.writeHead(200, { "Content-Type": "text/html" });
+  let query = url.parse(req.url, true).query;
+  let html = `<!DOCTYPE html>
     <html>
     
     <head>
@@ -170,40 +188,82 @@ function writeEmployeeLoginPage(req, res) {
             <button type="button"><b>Login</b></button>
         </div>
     </body>    
-    `
-    res.write(html);
-    res.end();
+    `;
+  res.write(html);
+  res.end();
 }
 
 function writeTestCollection(req, res) {
-    res.writeHead(200, { "Content-Type": "text/html" })
-    let query = url.parse(req.url, true).query;
-    let html = `<h3>Test Collection</h3>
+  res.writeHead(200, { "Content-Type": "text/html" });
+  let query = url.parse(req.url, true).query;
+  let email = query.email ? query.email : "";
+  let password = query.password ? query.password : "";
+  con.connect(function (err) {
+    con.query(
+      `SELECT * FROM employee WHERE email LIKE '%${email}%' and passcode LIKE '%${password}%'`,
+      function (err, result, fields) {
+        // console.log(result);
+        if (err || result.length == 0) {
+          console.log("ERROR", err);
+          res.write(`
+                <script>
+                alert("wrong email or password");
+                location.href="/labtech";
+                </script>
+              `);
+          res.end();
+        } else {
+          console.log(result);
 
-    Employee ID: <input type="text" name="employee_ID" size="20">
-    <br>
-    Test barcode: <input type="text" name="test_barcode" size="20">
-    <br>
-    <button>Add</button>
-    <table>
-        <tr>
-            <th>Employee ID</th>
-            <th>Test Barcode</th>
-        </tr>
-        <tr>
-            <td><input type="checkbox"> 111</td>
-        <td>123</td>
-        </tr>
-    </table>
-    <button>Delete</button>`
-    res.write(html);
-    res.end();
+          let html = `<h3>Test Collection</h3>
+                Employee ID: <input type="text" name="employee_ID" size="20">
+                <br>
+                Test barcode: <input type="text" name="test_barcode" size="20">
+                <br>
+                <button>Add</button>
+                <table>
+                    <tr>
+                        <th>Employee ID</th>
+                        <th>Test Barcode</th>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox"> 111</td>
+                    <td>123</td>
+                    </tr>
+                </table>
+                <button>Delete</button>`;
+          res.write(html);
+          res.end();
+        }
+      }
+    );
+  });
 }
 
 function writeLabHome(req, res) {
-    res.writeHead(200, { "Content-Type": "text/html" })
-    let query = url.parse(req.url, true).query;
-    let html = `<html>
+  res.writeHead(200, { "Content-Type": "text/html" });
+  let query = url.parse(req.url, true).query;
+  let email = query.email ? query.email : "";
+  let password = query.password ? query.password : "";
+  con.connect(function (err) {
+    con.query(
+      `SELECT * FROM labemployee WHERE email LIKE '%${email}%' and passcode LIKE '%${password}%'`,
+      function (err, result, fields) {
+        // console.log(result);
+        if (err || result.length == 0) {
+          console.log("ERROR", err);
+          res.write(`
+                <script>
+                alert("wrong email or password");
+                location.href="/labtech";
+                </script>
+              `);
+          res.end();
+        } else {
+          console.log(result);
+
+          let html = `
+          <html>
     <style>
     
     </style>
@@ -216,23 +276,28 @@ function writeLabHome(req, res) {
         <button onclick="location.href='/labtech/welltesting'"><b>Well Testing</b></button>
     </body>
     
-    </html>`
-    res.write(html);
-    res.end();
+    </html>
+    `;
+          res.write(html);
+          res.end();
+        }
+      }
+    );
+  });
 }
 
 function writeEmployeeResults(req, res) {
-    res.writeHead(200, { "Content-Type": "text/html" })
-    let query = url.parse(req.url, true).query;
-    let html = ``
-    res.write(html);
-    res.end();
+  res.writeHead(200, { "Content-Type": "text/html" });
+  let query = url.parse(req.url, true).query;
+  let html = ``;
+  res.write(html);
+  res.end();
 }
 
 function writePoolMapping(req, res) {
-    res.writeHead(200, { "Content-Type": "text/html" })
-    let query = url.parse(req.url, true).query;
-    let html = `<html>
+  res.writeHead(200, { "Content-Type": "text/html" });
+  let query = url.parse(req.url, true).query;
+  let html = `<html>
     <style>
     
     </style>
@@ -322,14 +387,14 @@ function writePoolMapping(req, res) {
         }
     </script>
     
-    </html>`
-    res.write(html);
-    res.end();
+    </html>`;
+  res.write(html);
+  res.end();
 }
 function writeWellTesting(req, res) {
-    res.writeHead(200, { "Content-Type": "text/html" })
-    let query = url.parse(req.url, true).query;
-    let html = `<html>
+  res.writeHead(200, { "Content-Type": "text/html" });
+  let query = url.parse(req.url, true).query;
+  let html = `<html>
 
     <body>
         <h1> Well Testing </h1>
@@ -393,7 +458,7 @@ function writeWellTesting(req, res) {
         <button>Delete Pool</button>
     </body>
     
-    </html>`
-    res.write(html);
-    res.end();
+    </html>`;
+  res.write(html);
+  res.end();
 }
