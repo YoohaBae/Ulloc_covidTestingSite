@@ -594,10 +594,10 @@ function writeWellTesting(req, res) {
         const email = urlParams.get('email');
         const password = urlParams.get('password');
         for (let i = 0; i < document.getElementsByClassName("well-container").length; i++) {
-            let poolCheck = document.querySelector('#well_check-" + i).checked;
-            let poolBarcode = document.querySelector('#wellTesting_poolBarcode-" + i).innerHTML;
-            let wellBarcode = document.querySelector('#wellTesting_wellBarcode-" + i).innerHTML;
-            let result = document.querySelector('#wellTesting_result-" + i).innerHTML;
+            let poolCheck = document.querySelector("#well_check-"+i.toString()).checked;
+            let poolBarcode = document.querySelector("#wellTesting_poolBarcode-" + i.toString()).innerHTML;
+            let wellBarcode = document.querySelector("#wellTesting_wellBarcode-" + i.toString()).innerHTML;
+            let result = document.querySelector("#wellTesting_result-" + i.toString()).innerHTML;
             console.log(poolCheck);
             if(poolCheck) {
                 var xmlHttp = new XMLHttpRequest();
@@ -798,7 +798,8 @@ function deleteWellBarcodes(req, res) {
   let query = url.parse(req.url, true).query;
   let email = query.email ? query.email : "";
   let password = query.password ? query.password : "";
-  let wellBarcode = query.poolBarcode ? query.poolBarcode : "";
+  let wellBarcode = query.poolBarcode ? query.wellBarcode : "";
+  let poolBarcode = query.poolBarcode ? query.poolBarcode : "";
   let sql = `DELETE FROM wellTesting WHERE poolBarcode='${poolBarcode}' AND wellBarcode='${wellBarcode}'`;
   con.query(sql, function (err, result) {
     if (err) throw err;
@@ -828,8 +829,7 @@ function writeWellBarcodes(req, res) {
   });
   //what is testingStartTime and testingEndTime
   //temporary
-  let currentTime = `SELECT GETDATE()`;
-  let sql2 = `INSERT INTO wellTesting(poolBarcode, wellBarcode, testingStartTime, testingEndTime, result) VALUES('${poolBarcode}', '${wellBarcode}', '${currentTime}', '${currentTime}', '${result}')`;
+  let sql2 = `INSERT INTO wellTesting(poolBarcode, wellBarcode, testingStartTime, testingEndTime, result) VALUES('${poolBarcode}', '${wellBarcode}', NOW(), NOW(), '${result}')`;
   con.query(sql2, function (err, result) {
     if (err) throw err;
     console.log("everything inserted into wellTesting");
