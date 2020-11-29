@@ -1,7 +1,4 @@
 <html>
-<style>
-
-</style>
 
 <body>
     <h1>
@@ -37,7 +34,7 @@
             </td>
         </tr>
     </table>
-    <button>Add more rows</button><br><br>
+    <button onclick="addMoreRows()">Add more rows</button><br><br>
     <button>Submit Pool</button>
     <br>
     <br>
@@ -85,6 +82,9 @@
             table.deleteRow(index);
             console.log(index);
         };
+    }
+    function addMoreRows() {
+        document.getElementById("pool").insertRow(-1).innerHTML = '<tr><td><input type="text" name="code" value=""></td><td><button type="button" onclick=delete class="btn btn-default">Delete</button></td></tr>';
     }
 </script>
 

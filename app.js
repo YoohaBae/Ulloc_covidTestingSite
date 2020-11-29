@@ -233,21 +233,30 @@ function writeTestCollection(req, res) {
         <head>
         <script>
                     function deleteBarcode() {
-                        let employeeID = document.querySelector("#employee_ID").value;
-                        let testBarcode = document.querySelector("#test_barcode").value;
-
-                        var xmlHttp = new XMLHttpRequest();
                         const urlParams = new URLSearchParams(window.location.search);
                         const email = urlParams.get('email');
                         const password = urlParams.get('password');
-                        let targetUrl = "/labtech/testCollection/delete?email=" + email + "&password=" + password + "&employee=" + employeeID + "&testBarcode=" + testBarcode;
-                        xmlHttp.open( "GET", targetUrl, false ); // false for synchronous request;
-                        location.href = targetUrl;
+                        for (let i = 0; i < document.getElementsByClassName("barcode-container").length; i++) {
+                            let employeeCheck = document.querySelector("#employee_check-" + i).checked;
+                            let employeeID = document.querySelector("#employee_ID-" + i).innerHTML;
+                            let testBarcode = document.querySelector("#test_barcode-" + i).innerHTML;
+                            console.log('employee_check', employeeCheck);
+                            if (employeeCheck) {
+                                var xmlHttp = new XMLHttpRequest();
+                                let targetUrl = "/labtech/testCollection/delete?email=" + email + "&password=" + password + "&employee=" + employeeID + "&testBarcode=" + testBarcode;
+                                xmlHttp.open( "GET", targetUrl, true ); // false for synchronous request;
+    //                            alert(xmlHttp.responseText);
+                                xmlHttp.send( null );
+                            }
+
+                        }
+                        //location.href = targetUrl;
+                        location.href = "/labtech/testCollection?email=" + email + "&password=" + password;
                     }
 
                     function addBarcode() {
-                        let employeeID = document.querySelector("#employee_ID").innerHTML;
-                        let testBarcode = document.querySelector("#test_barcode").innerHTML;
+                        let employeeID = document.querySelector("#employee_ID").value;
+                        let testBarcode = document.querySelector("#test_barcode").value;
 
                         var xmlHttp = new XMLHttpRequest();
                         const urlParams = new URLSearchParams(window.location.search);
@@ -276,10 +285,14 @@ function writeTestCollection(req, res) {
           con.query(sql2, function (err, result) {
             if (err) throw err;
             let body = "";
-            for (let item of result) {
-              body += `<tr>
-                    <td><input type="checkbox">${item.employeeID}</td>
-                    <td>${item.testBarcode}</td>
+            for (let i = 0; i < result.length; i++) {
+              let item = result[i];
+              body += `<tr class="barcode-container">
+                    <td>
+                        <input type="checkbox" id="employee_check-${i}">
+                        <span id="employee_ID-${i}">${item.employeeID}</span>
+                    </td>
+                    <td id="test_barcode-${i}">${item.testBarcode}</td>
                 </tr>`;
             }
             res.write(body);
@@ -340,11 +353,25 @@ function writeLabHome(req, res) {
         <h1>
             Lab Home
         </h1>
-        <button onclick="location.href='/labtech/poolmapping'"><b>Pool Mapping</b></button>
-        <button onclick="location.href='/labtech/welltesting'"><b>Well Testing</b></button>
+        <button onclick="onPoolMappingClick()"><b>Pool Mapping</b></button>
+        <button onclick="onWellTestingClick()"><b>Well Testing</b></button>
     </body>
     
     </html>
+    <script>
+            function onPoolMappingClick() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const email = urlParams.get('email');
+                const password = urlParams.get('password');
+                location.href = "/labtech/poolMapping?email=" + email + "&password=" + password;
+            }
+            function onWellTestingClick() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const email = urlParams.get('email');
+                const password = urlParams.get('password');
+                location.href = "/labtech/wellTesting?email=" + email + "&password=" + password;
+            }
+    </script>
     `;
           res.write(html);
           res.end();
@@ -366,96 +393,96 @@ function writePoolMapping(req, res) {
   res.writeHead(200, { "Content-Type": "text/html" });
   let query = url.parse(req.url, true).query;
   let html = `<html>
-    <style>
-    
-    </style>
-    
-    <body>
-        <h1>
-            Pool Mapping
-        </h1>
-        <b>Pool Barcode: </b>
-        <input type="text" name="search" value="">
-        <br>
-        <b>Test Barcodes: </b>
-        <table id='pool'>
-            <tr>
-                <td>
-                    <input type="text" name="code" value="">
-                </td>
-                <td>
-                    <button type='button' onclick=delete class='btn btn-default'>Delete</button>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <input type="text" name="code" value="">
-                </td>
-                <td>
-                    <button type='button' onclick='delete(this);' class='btn btn-default'>Delete</button>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <input type="text" name="code" value="">
-                </td>
-                <td>
-                    <button type='button' onclick='delete(this);' class='btn btn-default'>Delete</button>
-                </td>
-            </tr>
-        </table>
-        <button>Add more rows</button><br><br>
-        <button>Submit Pool</button>
-        <br>
-        <br>
-        <table id='existingPools'>
-            <tr>
-                <td>
-                </td>
-                <td>
-                    Test Barcodes
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label><input type="checkbox">111</label>
-                </td>
-                <td>
-                    123, 456, 789
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label><input type="checkbox">222</label>
-                </td>
-                <td>
-                    876, 873
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label><input type="checkbox">333</label>
-                </td>
-                <td>
-                    734, 112
-                </td>
-            </tr>
-        </table>
-        <button>Edit Pool</button>
-        <button>Delete Pool</button>
-    </body>
-    <script>
-        var index, table = document.getElementById('pool');
-        for (var i = 0; i < table.rows.length; i++) {
-            table.rows[i].cells[1].onclick = function () {
-                index = this.parentElement.rowIndex;
-                table.deleteRow(index);
-                console.log(index);
-            };
-        }
-    </script>
-    
-    </html>`;
+
+<body>
+    <h1>
+        Pool Mapping
+    </h1>
+    <b>Pool Barcode: </b>
+    <input type="text" name="search" value="">
+    <br>
+    <b>Test Barcodes: </b>
+    <table id='pool'>
+        <tr>
+            <td>
+                <input type="text" name="code" value="">
+            </td>
+            <td>
+                <button type='button' onclick=delete class='btn btn-default'>Delete</button>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="text" name="code" value="">
+            </td>
+            <td>
+                <button type='button' onclick='delete(this);' class='btn btn-default'>Delete</button>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="text" name="code" value="">
+            </td>
+            <td>
+                <button type='button' onclick='delete(this);' class='btn btn-default'>Delete</button>
+            </td>
+        </tr>
+    </table>
+    <button onclick="addMoreRows()">Add more rows</button><br><br>
+    <button>Submit Pool</button>
+    <br>
+    <br>
+    <table id='existingPools'>
+        <tr>
+            <td>
+            </td>
+            <td>
+                Test Barcodes
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label><input type="checkbox">111</label>
+            </td>
+            <td>
+                123, 456, 789
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label><input type="checkbox">222</label>
+            </td>
+            <td>
+                876, 873
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label><input type="checkbox">333</label>
+            </td>
+            <td>
+                734, 112
+            </td>
+        </tr>
+    </table>
+    <button>Edit Pool</button>
+    <button>Delete Pool</button>
+</body>
+<script>
+    var index, table = document.getElementById('pool');
+    for (var i = 0; i < table.rows.length; i++) {
+        table.rows[i].cells[1].onclick = function () {
+            index = this.parentElement.rowIndex;
+            table.deleteRow(index);
+            console.log(index);
+        };
+    };
+    function addMoreRows() {
+        document.getElementById("pool").insertRow(-1).innerHTML = '<tr><td><input type="text" name="code" value=""></td><td><button type="button" onclick=delete class="btn btn-default">Delete</button></td></tr>';
+    };
+</script>
+
+</html>`;
   res.write(html);
   res.end();
 }
@@ -553,23 +580,23 @@ function writeBarcode(req, res) {
 }
 
 function eraseBarcode(req, res) {
-    res.writeHead(200, { "Content-Type": "text/html" });
-    console.log('inputted queries', req.query);
-    let query = url.parse(req.url, true).query;
-    let employee = query.employee ? query.employee : "";
-    let testBarcode = query.testBarcode ? query.testBarcode : "";
-    let labID = query.email ? query.email : "";
-    let password = query.password ? query.password : "";
-    let sql = `DELETE FROM employeetest WHERE testBarcode='${testBarcode}' AND employeeID='${employee}' AND collectedBy='${labID}'`;
-    con.query(sql, function(err, result){
-        if (err) throw err;
-        console.log("1 record deleted", result);
-        console.log(sql);
-        console.log('--------');
-    })
-    res.write(`
+  res.writeHead(200, { "Content-Type": "text/html" });
+  console.log("inputted queries", req.query);
+  let query = url.parse(req.url, true).query;
+  let employee = query.employee ? query.employee : "";
+  let testBarcode = query.testBarcode ? query.testBarcode : "";
+  let labID = query.email ? query.email : "";
+  let password = query.password ? query.password : "";
+  let sql = `DELETE FROM employeetest WHERE testBarcode='${testBarcode}' AND employeeID='${employee}' AND collectedBy='${labID}'`;
+  con.query(sql, function (err, result) {
+    if (err) throw err;
+    console.log("1 record deleted", result);
+    console.log(sql);
+    console.log("--------");
+  });
+  res.write(`
     <script>
     location.href="/labtech/testCollection?email="+ '${labID}' + "&password=" + '${password}';
     </script>`);
-    res.end();
+  res.end();
 }
