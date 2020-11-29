@@ -21,7 +21,7 @@ app.get("/labtech/", (req, res) => {
 });
 
 app.get("/employee", (req, res) => {
-  writeEmployeeLoginPage(req, res);
+  res.sendFile(path.join(__dirname + '/views/employeeLoginPage.html'));
 });
 
 app.get("/employee/results", (req, res) => {
@@ -170,63 +170,46 @@ function writeLoginPage(req, res) {
   res.end();
 }
 
-function writeEmployeeLoginPage(req, res) {
-  res.writeHead(200, { "Content-Type": "text/html" });
-  let query = url.parse(req.url, true).query;
-  let html = `<!DOCTYPE html>
-    <html>
-    
-    <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <style>
-            h2 {
-                text-align: center;
-            }
-    
-            body {
-                font-family: Arial, Helvetica, sans-serif;
-            }
-    
-            /* Full-width input fields */
-            input[type=text],
-            input[type=password] {
-                width: 20%;
-                padding: 12px 20px;
-                margin: 8px 0;
-                border: 4px solid #000000;
-                box-sizing: border-box;
-                align-items: center;
-            }
-    
-            /* Set a style for all buttons */
-            button {
-                background-color: white;
-                color: black;
-                padding: 14px 20px;
-                margin: 8px 0;
-                border: 4px solid #000000;
-                cursor: pointer;
-                font-style: bold;
-            }
-        </style>
-    </head>
-    
-    <body>
-        <h2>Employee Login Page for Results</h2>
-        <div class="container" align="center">
-            <label for="uname" style="font-size: 20px;"><b>&emsp;Email: &emsp;&emsp;</b></label>
-            <input type="text" name="uname" required><br>
-    
-            <label for="psw" style="font-size: 20px;"><b>Password: &emsp;</b></label>
-            <input type="password" name="psw" required><br>
-    
-            <button type="button"><b>Login</b></button>
-        </div>
-    </body>    
-    `;
-  res.write(html);
+var session = require('express-session');
+var bodyParser = require('body-parser');
+const sync_mysql = require('sync-mysql');
+var connection = new sync_mysql({
+  host: 'localhost',
+  user: 'me2',
+  password: 'iamgroot',
+  database: 'project'
+});
+
+app.use(session({
+  secret: 'secret',
+  resave: true,
+  saveUninitialized: true
+}));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+app.post('/auth', function (req, res) {
+  var user = req.body.email;
+  console.log(user);
+  var pw = req.body.password;
+  console.log(pw);
+  if (user && pw) {
+    let table = connection.query('SELECT * FROM employee WHERE email = ? AND passcode = ?', [user, pw]);
+    if (table.length > 0) {
+      res.redirect('/employee/results');
+    }
+    else {
+      res.write(`
+                <script>
+                alert("wrong email or password");
+                location.href="/employee";
+                </script>
+              `);
+    }
+    res.end();
+  };
   res.end();
-}
+});
 
 function writeTestCollection(req, res) {
   res.writeHead(200, { "Content-Type": "text/html" });
