@@ -64,6 +64,17 @@ app.get("/labtech/poolMapping/delete", (req, res) => {
   deleteTestBarcodes(req, res);
 });
 
+app.get("/labtech/wellTesting/add", (req, res) => {
+  writeWellBarcodes(req, res);
+});
+
+app.get("/labtech/wellTesting/edit", (req, res) => {
+  editWellBarcodes(req, res);
+});
+
+app.get("/labtech/wellTesting/delete", (req, res) => {
+  deleteWellBarcodes(req, res);
+});
 port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
@@ -441,8 +452,8 @@ function writePoolMapping(req, res) {
                 </td>
             </tr>`;
     res.write(head);
-    let sql2 = `SELECT * FROM pool`;
-    con.query(sql2, function (err, result) {
+    let sql = `SELECT * FROM pool`;
+    con.query(sql, function (err, result) {
       if (err) throw err;
       let body = "";
       for (let i = 0; i < result.length; i++) {
@@ -460,9 +471,9 @@ function writePoolMapping(req, res) {
       }
       res.write(body);
 
-      let sql3 = `SELECT * FROM poolmap`;
+      let sql2 = `SELECT * FROM poolmap`;
       //해당되는 pool에다가 testBarcode 넣어주기
-      /*con.query(sql3, function (err, result) {
+      /*con.query(sql2, function (err, result) {
         if (err) throw err;
         let body2 = "";
         for (let i = 0; i < result.length; i++) {
@@ -553,73 +564,105 @@ function writePoolMapping(req, res) {
 function writeWellTesting(req, res) {
   res.writeHead(200, { "Content-Type": "text/html" });
   let query = url.parse(req.url, true).query;
-  let html = `<html>
-
+  con.connect(function (err) {
+    let head = `<!DOCTYPE html>
+    <html>
+    <head>
+    <script>
+    function onWellTestingAddClick() {
+        let wellBarcode = document.querySelector("#wellTesting_inputWellBarcode").value;
+        let poolBarcode = document.querySelector("#wellTesting_inputPoolBarcode").value;
+        let result = document.querySelector("#wellTesting_inputResult").value;
+        var xmlHttp = new XMLHttpRequest();
+        const urlParams = new URLSearchParams(window.location.search);
+        const email = urlParams.get('email');
+        const password = urlParams.get('password');
+        let targetUrl = "/labtech/wellTesting/add?email=" + email + "&password=" + password + "&wellBarcode=" + wellBarcode + "&poolBarcode=" + poolBarcode + "&result=" + result;
+        xmlHttp.open( "GET", targetUrl, false);
+        location.href = targetUrl;
+    };
+    function onWellTestingEditPoolClick() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const email = urlParams.get('email');
+        const password = urlParams.get('password');
+        for (let i = 0; i < document.getElementsByClassName("well-container").length; i++) {
+            
+        }
+    };
+    function onWellTestingDeletePoolClick() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const email = urlParams.get('email');
+        const password = urlParams.get('password');
+        for (let i = 0; i < document.getElementsByClassName("well-container").length; i++) {
+            let poolCheck = document.querySelector('#well_check-" + i).checked;
+            let poolBarcode = document.querySelector('#wellTesting_poolBarcode-" + i).innerHTML;
+            let wellBarcode = document.querySelector('#wellTesting_wellBarcode-" + i).innerHTML;
+            let result = document.querySelector('#wellTesting_result-" + i).innerHTML;
+            console.log(poolCheck);
+            if(poolCheck) {
+                var xmlHttp = new XMLHttpRequest();
+                let targetUrl = "/labtech/wellTesting/delete?email=" + email + "&password=" + password + "&wellBarcode=" + wellBarcode + "&poolBarcode=" + poolBarcode;
+                xmlHttp.open( "GET", targetUrl, true);
+                xmlHttp.send(null);
+            }
+        }
+        location.href = "/labtech/wellTesting?email=" + email + "$password=" + password;
+    };
+</script>
+</head>
     <body>
         <h1> Well Testing </h1>
         <b>Well Barcode: </b>
-        <input type="text" value=""><br><br>
+        <input type="text" value="" id="wellTesting_inputWellBarcode"><br><br>
         <b>Pool Barcode: </b>
-        <input type="text" value=""><br><br>
-        <form method="get">
-            <b>Result: </b>
-            <input type="text" name="progess" value="">
-            <select name="filter">
-                <option>In progress</option>
-                <option>Negative</option>
-                <option>Positive</option>>
-            </select>
-            <br>
-            <input type="submit" value="Add">
-            <br>
-        </form>
-        <table id="welltable">
+        <input type="text" value="" id="wellTesting_inputPoolBarcode"><br><br>
+        <b>Result: </b>
+        <select name="filter" id="wellTesting_inputResult">
+            <option>In progress</option>
+            <option>Negative</option>
+            <option>Positive</option>>
+        </select>
+        <br>
+        <button onclick="onWellTestingAddClick()">Add</button>
+        <br>
+        <table id="wellTable">
             <tr>
                 <td>Well Barcode</td>
-                <td>Poll Barcode</td>
+                <td>Pool Barcode</td>
                 <td>Result</td>
-            </tr>
-            <tr>
-                <td>
-                    <label><input type="checkbox">111</label>
-                </td>
-                <td>
-                    123
-                </td>
-                <td>
-                    In progress
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label><input type="checkbox">222</label>
-                </td>
-                <td>
-                    456
-                </td>
-                <td>
-                    In progress
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label><input type="checkbox">333</label>
-                </td>
-                <td>
-                    789
-                </td>
-                <td>
-                    Negative
-                </td>
-            </tr>
+            </tr>`;
+    res.write(head);
+    let sql = `SELECT * FROM welltesting`;
+    con.query(sql, function (err, result) {
+      if (err) throw err;
+      let body = "";
+      for (let i = 0; i < result.length; i++) {
+        let item = result[i];
+        body += `
+                <tr class="well-container">
+                    <td>
+                        <input type="checkbox" id="well_check-${i}">
+                        <span id="wellTesting_wellBarcode-${i}">${item.wellBarcode}</span>
+                    </td>
+                    <td>
+                        <span id="wellTesting_poolBarcode-${i}">${item.poolBarcode}</span>
+                    </td>
+                    <td>
+                        <span id="wellTesting_result-${i}">${item.result}</span>
+                    </td>
+                        `;
+      }
+      res.write(body);
+      let tail = `
         </table>
-        <button>Edit Pool</button>
-        <button>Delete Pool</button>
+        <button onclick="onWellTestingEditPoolClick()">Edit Pool</button>
+        <button onclick="onWellTestingDeletePoolClick()">Delete Pool</button>
     </body>
-    
     </html>`;
-  res.write(html);
-  res.end();
+      res.write(tail);
+      res.end();
+    });
+  });
 }
 
 function writeBarcode(req, res) {
@@ -731,5 +774,69 @@ function deleteTestBarcodes(req, res) {
     location.href="/labtech/testCollection?email="+ '${email}' + "&password=" + '${password}';
     </script>
   `);
+  res.end();
+}
+
+function editWellBarcodes(req, res) {
+  res.writeHead(200, { "Content-Type": "text/html" });
+  let query = url.parse(req.url, true).query;
+  let email = query.email ? query.email : "";
+  let password = query.password ? query.password : "";
+  let poolBarcode = query.poolBarcode ? query.poolBarcode : "";
+  let wellBarcode = query.wellBarcode ? query.wellBarcode : "";
+  let result = query.result ? query.result : "";
+  let sql = `UPDATE wellTesting(poolBarcode, wellBarcode, result) SET poolBarcode, wellBarcode, result`;
+  con.query(sql, function (err, result) {
+    if (err) throw err;
+    console.log("well updated");
+  });
+}
+
+function deleteWellBarcodes(req, res) {
+  res.writeHead(200, { "Content-Type": "text/html" });
+  let query = url.parse(req.url, true).query;
+  let email = query.email ? query.email : "";
+  let password = query.password ? query.password : "";
+  let wellBarcode = query.poolBarcode ? query.poolBarcode : "";
+  let sql = `DELETE FROM wellTesting WHERE poolBarcode='${poolBarcode}' AND wellBarcode='${wellBarcode}'`;
+  con.query(sql, function (err, result) {
+    if (err) throw err;
+    console.log(result);
+    console.log(sql);
+  });
+  res.write(`
+      <script>
+      location.href="/labtech/wellTesting?email="+ '${email}' + "&password=" + '${password}';
+      </script>
+    `);
+  res.end();
+}
+
+function writeWellBarcodes(req, res) {
+  res.writeHead(200, { "Content-Type": "text/html" });
+  let query = url.parse(req.url, true).query;
+  let email = query.email ? query.email : "";
+  let password = query.password ? query.password : "";
+  let wellBarcode = query.wellBarcode ? query.wellBarcode : "";
+  let poolBarcode = query.poolBarcode ? query.poolBarcode : "";
+  let result = query.result ? query.result : "";
+  let sql = `INSERT INTO well(wellBarcode) VALUES('${wellBarcode}')`;
+  con.query(sql, function (err, resut) {
+    if (err) throw err;
+    console.log("well barcode inserted into well");
+  });
+  //what is testingStartTime and testingEndTime
+  //temporary
+  let currentTime = `SELECT GETDATE()`;
+  let sql2 = `INSERT INTO wellTesting(poolBarcode, wellBarcode, testingStartTime, testingEndTime, result) VALUES('${poolBarcode}', '${wellBarcode}', '${currentTime}', '${currentTime}', '${result}')`;
+  con.query(sql2, function (err, result) {
+    if (err) throw err;
+    console.log("everything inserted into wellTesting");
+    console.log(sql);
+  });
+  res.write(`
+        <script>
+            location.href="/labtech/wellTesting?email=" + '${email}' + "&password=" + '${password}';        
+        </script>`);
   res.end();
 }
