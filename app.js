@@ -44,6 +44,10 @@ app.get("/labtech/wellTesting", (req, res) => {
   writeWellTesting(req, res);
 });
 
+app.get("/labtech/testCollection/add", (req, res) => {
+  writeBarcode(req, res);
+});
+
 port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
@@ -112,7 +116,7 @@ function writeLoginPage(req, res) {
     
     <body>
         <h2>Login Page</h2>
-        <div class="container">
+        <div class="container" align="center">
             <label for="uname" style="font-size: 20px;"><b>&emsp;Email: &emsp;&emsp;</b></label>
             <input type="text" id="email" name="uname" required><br>
     
@@ -120,13 +124,17 @@ function writeLoginPage(req, res) {
             <input type="password" id="password" name="psw" required><br>
     
             <button type="button" onclick= "onLoginCollectorClick()"><b>Login Collector</b></button>
-            <button type="button" onclick="location.href='/labtech/labHome'"><b>Lab Login</b></button>
+            <button type="button" onclick="onLabLoginClick()"><b>Lab Login</b></button>
         </div>
         <script>
             function onLoginCollectorClick() {
                 location.href = '/labtech/testCollection?email=' + document.querySelector("#email").value + '&password=' + document.querySelector("#password").value;
             }
+            function onLabLoginClick() {
+                location.href = '/labtech/labHome?email=' + document.querySelector("#email").value + '&password=' + document.querySelector("#password").value;
+            }
         </script>
+
     </body>
     
     </html>
@@ -200,7 +208,7 @@ function writeTestCollection(req, res) {
   let password = query.password ? query.password : "";
   con.connect(function (err) {
     con.query(
-      `SELECT * FROM employee WHERE email LIKE '%${email}%' and passcode LIKE '%${password}%'`,
+      `SELECT * FROM labemployee WHERE labID LIKE '${email}' and password LIKE '${password}'`,
       function (err, result, fields) {
         // console.log(result);
         if (err || result.length == 0) {
@@ -215,24 +223,61 @@ function writeTestCollection(req, res) {
         } else {
           console.log(result);
 
-          let html = `<h3>Test Collection</h3>
-                Employee ID: <input type="text" name="employee_ID" size="20">
+          let head = `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+        <script>
+                    function deleteBarcode() {
+                        document.querySelector("#employee_ID").value;
+                        document.querySelector("#test_barcode").value;
+                    }
+
+                    function addBarcode() {
+                        let employeeID = document.querySelector("#employee_ID").value;
+                        let testBarcode = document.querySelector("#test_barcode").value;
+
+                        var xmlHttp = new XMLHttpRequest();
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const email = urlParams.get('email');
+                        let targetUrl = "/labtech/testCollection/add?email=" + email + "&employee=" + employeeID + "&testBarcode=" + testBarcode;
+                        alert(targetUrl);
+                        xmlHttp.open( "GET", targetUrl, false ); // false for synchronous request;
+                        location.href = targetUrl;
+                    }
+                </script>
+        </head>
+        <body>
+        <h3>Test Collection</h3>
+                Employee ID: <input type="text" id = "employee_ID" name="employee_ID" size="20">
                 <br>
-                Test barcode: <input type="text" name="test_barcode" size="20">
+                Test barcode: <input type="text" id = "test_barcode" name="test_barcode" size="20">
                 <br>
-                <button>Add</button>
+                <button onclick="addBarcode()">Add</button>
                 <table>
                     <tr>
                         <th>Employee ID</th>
                         <th>Test Barcode</th>
-                    </tr>
-                    <tr>
-                        <td><input type="checkbox"> 111</td>
+                    </tr>`;
+          res.write(head);
+          let sql2 = `SELECT * FROM employeetest`;
+          con.query(sql2, function (err, result) {
+            if (err) throw err;
+            for (let item of result) {
+              body += `<tr>
+                    <td><input type="checkbox"> 111</td>
                     <td>123</td>
-                    </tr>
-                </table>
-                <button>Delete</button>`;
-          res.write(html);
+                </tr>`;
+            }
+            res.write(body);
+            res.end();
+          });
+          let tail = `</table>
+                <button onclick="deleteBarcode()">Delete</button>
+                </body>
+                </html>
+                `;
+          res.write(tail);
           res.end();
         }
       }
@@ -247,7 +292,7 @@ function writeLabHome(req, res) {
   let password = query.password ? query.password : "";
   con.connect(function (err) {
     con.query(
-      `SELECT * FROM labemployee WHERE email LIKE '%${email}%' and passcode LIKE '%${password}%'`,
+      `SELECT * FROM labemployee WHERE labID LIKE '${email}' and password LIKE '${password}'`,
       function (err, result, fields) {
         // console.log(result);
         if (err || result.length == 0) {
@@ -461,4 +506,19 @@ function writeWellTesting(req, res) {
     </html>`;
   res.write(html);
   res.end();
+}
+
+function writeBarcode(req, res) {
+  res.writeHead(200, { "Content-Type": "text/html" });
+  let query = url.parse(req.url, true).query;
+  let employee = query.employee ? query.employee : "";
+  let testBarcode = query.testBarcode ? query.testBarcode : "";
+  let labID = query.email ? query.email : "";
+  let currentTime = `SELECT GETDATE()`;
+  console.log(currentTime);
+  let sql = `INSERT INTO employeetest(testBarcode, employeeID, collectionTime, collectedBy) VALUES('${testBarcode}', '${employee}', '${currentTime}', '${labID}')`;
+  con.query(sql, function (err, result) {
+    if (err) throw err;
+    console.log("1 record inserted");
+  });
 }
