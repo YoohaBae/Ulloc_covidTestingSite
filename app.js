@@ -240,7 +240,8 @@ function writeTestCollection(req, res) {
                         var xmlHttp = new XMLHttpRequest();
                         const urlParams = new URLSearchParams(window.location.search);
                         const email = urlParams.get('email');
-                        let targetUrl = "/labtech/testCollection/add?email=" + email + "&employee=" + employeeID + "&testBarcode=" + testBarcode;
+                        const password = urlParams.get('password');
+                        let targetUrl = "/labtech/testCollection/add?email=" + email + "&password=" + password "&employee=" + employeeID + "&testBarcode=" + testBarcode;
                         alert(targetUrl);
                         xmlHttp.open( "GET", targetUrl, false ); // false for synchronous request;
                         location.href = targetUrl;
@@ -263,6 +264,7 @@ function writeTestCollection(req, res) {
           let sql2 = `SELECT * FROM employeetest`;
           con.query(sql2, function (err, result) {
             if (err) throw err;
+            let body;
             for (let item of result) {
               body += `<tr>
                     <td><input type="checkbox"> 111</td>
@@ -270,7 +272,6 @@ function writeTestCollection(req, res) {
                 </tr>`;
             }
             res.write(body);
-            res.end();
           });
           let tail = `</table>
                 <button onclick="deleteBarcode()">Delete</button>
@@ -514,6 +515,7 @@ function writeBarcode(req, res) {
   let employee = query.employee ? query.employee : "";
   let testBarcode = query.testBarcode ? query.testBarcode : "";
   let labID = query.email ? query.email : "";
+  let password = query.password ? query.password : "";
   let currentTime = `SELECT GETDATE()`;
   console.log(currentTime);
   let sql = `INSERT INTO employeetest(testBarcode, employeeID, collectionTime, collectedBy) VALUES('${testBarcode}', '${employee}', '${currentTime}', '${labID}')`;
@@ -521,4 +523,9 @@ function writeBarcode(req, res) {
     if (err) throw err;
     console.log("1 record inserted");
   });
+  res.write(`
+  <script>
+  location.href="/labtech/testCollection?email="+ '${email}' + "&password=" + '${password}';
+  </script>`);
+  res.end();
 }
