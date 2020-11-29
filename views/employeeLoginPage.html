@@ -39,12 +39,14 @@
 <body>
     <h2>Employee Login Page for Results</h2>
     <div class="container" align="center">
-        <label for="uname" style="font-size: 20px;"><b>&emsp;Email: &emsp;&emsp;</b></label>
-        <input type="text" name="uname" required><br>
+        <form action="auth" method="post">
+            <label for="email" style="font-size: 20px;"><b>&emsp;Email: &emsp;&emsp;</b></label>
+            <input type="text" name="email" required><br>
 
-        <label for="psw" style="font-size: 20px;"><b>Password: &emsp;</b></label>
-        <input type="password" name="psw" required><br>
+            <label for="password" style="font-size: 20px;"><b>Password: &emsp;</b></label>
+            <input type="password" name="password" required><br>
 
-        <button type="button"><b>Login</b></button>
+            <input type="submit" value="Login"><br>
+        </form>
     </div>
 </body>
