@@ -48,6 +48,10 @@ app.get("/labtech/testCollection/add", (req, res) => {
   writeBarcode(req, res);
 });
 
+app.get("/labtech/testCollection/delete", (req, res) => {
+  eraseBarcode(req, res);
+});
+
 port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
@@ -229,11 +233,6 @@ function writeTestCollection(req, res) {
         <head>
         <script>
                     function deleteBarcode() {
-                        document.querySelector("#employee_ID").value;
-                        document.querySelector("#test_barcode").value;
-                    }
-
-                    function addBarcode() {
                         let employeeID = document.querySelector("#employee_ID").value;
                         let testBarcode = document.querySelector("#test_barcode").value;
 
@@ -241,8 +240,20 @@ function writeTestCollection(req, res) {
                         const urlParams = new URLSearchParams(window.location.search);
                         const email = urlParams.get('email');
                         const password = urlParams.get('password');
-                        let targetUrl = "/labtech/testCollection/add?email=" + email + "&password=" + password "&employee=" + employeeID + "&testBarcode=" + testBarcode;
-                        alert(targetUrl);
+                        let targetUrl = "/labtech/testCollection/delete?email=" + email + "&password=" + password + "&employee=" + employeeID + "&testBarcode=" + testBarcode;
+                        xmlHttp.open( "GET", targetUrl, false ); // false for synchronous request;
+                        location.href = targetUrl;
+                    }
+
+                    function addBarcode() {
+                        let employeeID = document.querySelector("#employee_ID").innerHTML;
+                        let testBarcode = document.querySelector("#test_barcode").innerHTML;
+
+                        var xmlHttp = new XMLHttpRequest();
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const email = urlParams.get('email');
+                        const password = urlParams.get('password');
+                        let targetUrl = "/labtech/testCollection/add?email=" + email + "&password=" + password + "&employee=" + employeeID + "&testBarcode=" + testBarcode;
                         xmlHttp.open( "GET", targetUrl, false ); // false for synchronous request;
                         location.href = targetUrl;
                     }
@@ -264,22 +275,33 @@ function writeTestCollection(req, res) {
           let sql2 = `SELECT * FROM employeetest`;
           con.query(sql2, function (err, result) {
             if (err) throw err;
-            let body;
+            let body = "";
             for (let item of result) {
               body += `<tr>
-                    <td><input type="checkbox"> 111</td>
-                    <td>123</td>
+                    <td><input type="checkbox">${item.employeeID}</td>
+                    <td>${item.testBarcode}</td>
                 </tr>`;
             }
             res.write(body);
-          });
-          let tail = `</table>
+
+            let tail = `</table>
                 <button onclick="deleteBarcode()">Delete</button>
                 </body>
                 </html>
                 `;
-          res.write(tail);
-          res.end();
+            res.write(tail);
+            res.end();
+          });
+
+          ///
+          let queryResults = "whatever the loop generated";
+
+          let html = `
+          all the tagstuff
+          ${queryResults}
+          all the tail stuff`;
+          res.write;
+          res.send;
         }
       }
     );
@@ -525,7 +547,29 @@ function writeBarcode(req, res) {
   });
   res.write(`
   <script>
-  location.href="/labtech/testCollection?email="+ '${email}' + "&password=" + '${password}';
+  location.href="/labtech/testCollection?email="+ '${labID}' + "&password=" + '${password}';
   </script>`);
   res.end();
+}
+
+function eraseBarcode(req, res) {
+    res.writeHead(200, { "Content-Type": "text/html" });
+    console.log('inputted queries', req.query);
+    let query = url.parse(req.url, true).query;
+    let employee = query.employee ? query.employee : "";
+    let testBarcode = query.testBarcode ? query.testBarcode : "";
+    let labID = query.email ? query.email : "";
+    let password = query.password ? query.password : "";
+    let sql = `DELETE FROM employeetest WHERE testBarcode='${testBarcode}' AND employeeID='${employee}' AND collectedBy='${labID}'`;
+    con.query(sql, function(err, result){
+        if (err) throw err;
+        console.log("1 record deleted", result);
+        console.log(sql);
+        console.log('--------');
+    })
+    res.write(`
+    <script>
+    location.href="/labtech/testCollection?email="+ '${labID}' + "&password=" + '${password}';
+    </script>`);
+    res.end();
 }
