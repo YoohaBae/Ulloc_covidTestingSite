@@ -3,7 +3,11 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
+<<<<<<< HEAD
 -- Generation Time: Nov 29, 2020 at 04:44 PM
+=======
+-- Generation Time: Nov 29, 2020 at 01:27 PM
+>>>>>>> 180c90ea0d92fe1dc5e288b2cdf0d5f69e93d841
 -- Server version: 10.4.16-MariaDB
 -- PHP Version: 7.4.12
 
@@ -40,9 +44,12 @@ CREATE TABLE `employee` (
 --
 
 INSERT INTO `employee` (`employeeID`, `email`, `firstName`, `lastName`, `passcode`) VALUES
+<<<<<<< HEAD
 ('111', 'ulloc2@gmail.com', 'ulloc2', 'stony2', 'asdf'),
 ('222', 'ulloc3@gmail.com', 'ulloc3', 'stony3', 'asdf'),
 ('333', 'ulloc4@gmail.com', 'ulloc4', 'stony4', 'asdf'),
+=======
+>>>>>>> 180c90ea0d92fe1dc5e288b2cdf0d5f69e93d841
 ('444', 'ulloc@gmail.com', 'ulloc', 'stony', 'asdf');
 
 -- --------------------------------------------------------
@@ -63,6 +70,7 @@ CREATE TABLE `employeetest` (
 --
 
 INSERT INTO `employeetest` (`testBarcode`, `employeeID`, `collectionTime`, `collectedBy`) VALUES
+<<<<<<< HEAD
 ('1', '111', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
 ('10', '444', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
 ('11', '444', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
@@ -75,6 +83,10 @@ INSERT INTO `employeetest` (`testBarcode`, `employeeID`, `collectionTime`, `coll
 ('7', '333', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
 ('8', '333', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
 ('9', '333', '0000-00-00 00:00:00', 'ullocLab@gmail.com');
+=======
+('1', '444', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
+('2', '444', '0000-00-00 00:00:00', 'ullocLab@gmail.com');
+>>>>>>> 180c90ea0d92fe1dc5e288b2cdf0d5f69e93d841
 
 -- --------------------------------------------------------
 

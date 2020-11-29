@@ -617,6 +617,7 @@ function writeWellTesting(req, res) {
         <b>Pool Barcode: </b>
         <input type="text" value="" id="wellTesting_inputPoolBarcode"><br><br>
         <b>Result: </b>
+
         <select name="filter" id="wellTesting_inputResult">
             <option>In progress</option>
             <option>Negative</option>
