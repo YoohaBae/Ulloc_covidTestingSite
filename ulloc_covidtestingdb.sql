@@ -36,7 +36,8 @@ CREATE TABLE `employee` (
   `email` varchar(50) DEFAULT NULL,
   `firstName` varchar(50) DEFAULT NULL,
   `lastName` varchar(50) DEFAULT NULL,
-  `passcode` varchar(50) DEFAULT NULL
+  `passcode` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`employeeID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -69,24 +70,7 @@ CREATE TABLE `employeetest` (
 -- Dumping data for table `employeetest`
 --
 
-INSERT INTO `employeetest` (`testBarcode`, `employeeID`, `collectionTime`, `collectedBy`) VALUES
-<<<<<<< HEAD
-('1', '111', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
-('10', '444', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
-('11', '444', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
-('12', '444', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
-('2', '111', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
-('3', '111', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
-('4', '222', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
-('5', '222', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
-('6', '222', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
-('7', '333', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
-('8', '333', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
-('9', '333', '0000-00-00 00:00:00', 'ullocLab@gmail.com');
-=======
-('1', '444', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
-('2', '444', '0000-00-00 00:00:00', 'ullocLab@gmail.com');
->>>>>>> 180c90ea0d92fe1dc5e288b2cdf0d5f69e93d841
+INSERT INTO `employeetest` VALUES ('1','111','2020-12-01 02:19:39','ullocLab@gmail.com'),('10','444','2020-12-01 02:15:39','ullocLab@gmail.com'),('11','444','2020-12-01 02:20:26','ullocLab@gmail.com'),('12','444','2020-12-01 02:24:02','ullocLab@gmail.com'),('2','111','2020-12-01 02:22:53','ullocLab@gmail.com'),('3','111','2020-12-01 02:23:48','ullocLab@gmail.com'),('4','222','2020-12-01 02:26:45','ullocLab@gmail.com'),('5','222','2020-12-01 02:19:28','ullocLab@gmail.com'),('6','222','2020-12-01 02:24:30','ullocLab@gmail.com'),('7','333','2020-12-01 02:18:56','ullocLab@gmail.com');
 
 -- --------------------------------------------------------
 
