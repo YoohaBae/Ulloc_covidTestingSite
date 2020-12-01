@@ -4,6 +4,8 @@ const app = express();
 const url = require("url");
 const path = require("path");
 const mysql = require("mysql");
+const session = require('express-session');
+const bodyParser = require('body-parser');
 const con = mysql.createConnection({
   host: "localhost",
   port: 3306,
@@ -64,6 +66,10 @@ app.get("/labtech/poolMapping/delete", (req, res) => {
   deleteTestBarcodes(req, res);
 });
 
+app.get("/labtech/poolMapping/editmode", (req, res) => {
+  editmode_TestBarcodes(req, res);
+});
+
 app.get("/labtech/wellTesting/add", (req, res) => {
   writeWellBarcodes(req, res);
 });
@@ -79,6 +85,7 @@ app.get("/labtech/wellTesting/editmode", (req, res) => {
 app.get("/labtech/wellTesting/delete", (req, res) => {
   deleteWellBarcodes(req, res);
 });
+
 port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
@@ -174,16 +181,6 @@ function writeLoginPage(req, res) {
   res.end();
 }
 
-var session = require('express-session');
-var bodyParser = require('body-parser');
-const sync_mysql = require('sync-mysql');
-var connection = new sync_mysql({
-  host: 'localhost',
-  user: 'me2',
-  password: 'iamgroot',
-  database: 'project'
-});
-
 app.use(session({
   secret: 'secret',
   resave: true,
@@ -198,7 +195,8 @@ app.post('/auth', function (req, res) {
   var pw = req.body.password;
   console.log(pw);
   if (user && pw) {
-    let table = connection.query('SELECT * FROM employee WHERE email = ? AND passcode = ?', [user, pw]);
+    let table = con.query(`SELECT * FROM employee WHERE email=? AND passcode = ?`, [user, pw]);
+    console.log(table)
     if (table.length > 0) {
       res.redirect('/employee/results');
     }
@@ -214,6 +212,59 @@ app.post('/auth', function (req, res) {
   };
   res.end();
 });
+
+function writeEmployeeResults(req, res) {
+  res.writeHead(200, { "Content-Type": "text/html" });
+  let html = `<!DOCTYPE html>
+  <html>
+  <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <style>
+          h2 {
+              text-align: center;
+          }
+  
+          body {
+              font-family: Arial, Helvetica, sans-serif;
+          }
+      </style>
+  </head>
+  
+  <body>
+      <h3 style="text-align: center;">Employee Home</h3>
+      <div class="container" align="center">
+          <table>
+              <tr>
+                  <td>Collection Date</td>
+                  <td>Result</td>
+              </tr>`;
+  let query = url.parse(req.url, true).query;
+  let email = query.email ? query.email : "";
+  let employeedb = con.query('SELECT employeeID, email FROM employee WHERE email = ?', [email]);
+  let employeeID = employeedb[0].employeeID;
+  console.log(employeeID);
+  let employeetestdb = con.query('SELECT testBarcode, employeeID, collectionTime FROM employeetest WHERE employeeID = ?', [employeeID]);
+  for (i = 0; i < employeetestdb.length; i++) {
+    let testBarcode = employeetestdb[i].testBarcode;
+    console.log(testBarcode);
+    let collectionTime = employeetestdb[i].collectionTime;
+    console.log(collectionTime);
+    let poolmapdb = con.query('SELECT testBarcode, poolBarcode FROM poolmap WHERE testBarcode = ?', [testBarcode]);
+    let poolBarcode = poolmapdb[0].poolBarcode;
+    console.log(poolBarcode);
+    let welltestingdb = con.query('SELECT poolBarcode, result FROM welltesting WHERE poolBarcode = ?', [poolBarcode]);
+    let result = welltestingdb[0].result;
+    console.log(result);
+    html += `
+    <tr>
+      <td>` + collectionTime + `</td>
+      <td>` + result + `</td>
+    </tr>`
+      ;
+  }
+  res.write(html + `\n\n</table></body>\n</html>`);
+  res.end();
+}
 
 function writeTestCollection(req, res) {
   res.writeHead(200, { "Content-Type": "text/html" });
@@ -381,6 +432,7 @@ function writeLabHome(req, res) {
 
 function writeEmployeeResults(req, res) {
   res.writeHead(200, { "Content-Type": "text/html" });
+  let query = url.parse(req.url, true).query;
   let html = `<!DOCTYPE html>
   <html>
   <head>
@@ -404,29 +456,44 @@ function writeEmployeeResults(req, res) {
                   <td>Collection Date</td>
                   <td>Result</td>
               </tr>`;
-  let query = url.parse(req.url, true).query;
   let email = query.email ? query.email : "";
-  let employeedb = connection.query('SELECT employeeID, email FROM employee WHERE email = ?', [email]);
+  let employeedb = con.query(
+    "SELECT employeeID, email FROM employee WHERE email = ?",
+    [email]
+  );
   let employeeID = employeedb[0].employeeID;
   console.log(employeeID);
-  let employeetestdb = connection.query('SELECT testBarcode, employeeID, collectionTime FROM employeetest WHERE employeeID = ?', [employeeID]);
+  let employeetestdb = con.query(
+    "SELECT testBarcode, employeeID, collectionTime FROM employeetest WHERE employeeID = ?",
+    [employeeID]
+  );
   for (i = 0; i < employeetestdb.length; i++) {
     let testBarcode = employeetestdb[i].testBarcode;
     console.log(testBarcode);
     let collectionTime = employeetestdb[i].collectionTime;
     console.log(collectionTime);
-    let poolmapdb = connection.query('SELECT testBarcode, poolBarcode FROM poolmap WHERE testBarcode = ?', [testBarcode]);
+    let poolmapdb = con.query(
+      "SELECT testBarcode, poolBarcode FROM poolmap WHERE testBarcode = ?",
+      [testBarcode]
+    );
     let poolBarcode = poolmapdb[0].poolBarcode;
     console.log(poolBarcode);
-    let welltestingdb = connection.query('SELECT poolBarcode, result FROM welltesting WHERE poolBarcode = ?', [poolBarcode]);
+    let welltestingdb = con.query(
+      "SELECT poolBarcode, result FROM welltesting WHERE poolBarcode = ?",
+      [poolBarcode]
+    );
     let result = welltestingdb[0].result;
     console.log(result);
-    html += `
-    <tr>
-      <td>` + collectionTime + `</td>
-      <td>` + result + `</td>
-    </tr>`
-      ;
+    html +=
+      `
+                <tr>
+                  <td>` +
+      collectionTime +
+      `</td>
+                  <td>` +
+      result +
+      `</td>
+                </tr>`;
   }
   res.write(html + `\n\n</table></body>\n</html>`);
   res.end();
@@ -502,30 +569,9 @@ function writePoolMapping(req, res) {
               `;
       }
       res.write(body);
-
-      let sql2 = `SELECT * FROM poolmap`;
-      //해당되는 pool에다가 testBarcode 넣어주기
-      /*con.query(sql2, function (err, result) {
-        if (err) throw err;
-        let body2 = "";
-        for (let i = 0; i < result.length; i++) {
-          let item = result[i];
-          body2 += `
-                    <tr class="pool-container">
-                        <td>
-                            <label><input type="checkbox">${item.poolBarcode}</label>
-                        </td>
-                        <td>
-                            ${item.testBarcode}
-                        </td>
-                    </tr>
-                        `;
-        }
-        res.write(body2);
-        */
       let tail = `
                 </table>
-                <button>Edit Pool</button>
+                <button onclick="onEditPoolClick()">Edit Pool</button>
                 <button onclick="onDeletePoolClick()">Delete Pool</button>
             </body>
             <script>
@@ -564,9 +610,20 @@ function writePoolMapping(req, res) {
                     const urlParams = new URLSearchParams(window.location.search);
                     const email = urlParams.get('email');
                     const password = urlParams.get('password');
+                    let poolCheck;
+                    let poolBarcode;
+                    let testBarcodes = "";
+                    let result;
                     for (let i = 0; i < document.getElementsByClassName("pool-container").length; i++) {
-                        
+                      poolCheck = document.querySelector("#pool_check-"+i.toString()).checked;
+                      console.log(poolCheck);
+                      if(poolCheck) {
+                        poolBarcode = document.querySelector("#pool_barcode-" + i.toString()).innerHTML;
+                        testBarcodes = document.querySelector("#test_barcodes-" + i.toString()).innerHTML;
+                      }
                     }
+                    let targetUrl = "/labtech/wellTesting/editmode?email=" + email + "&password=" + password + "&poolBarcode=" + wellBarcode + "&testBarcodes=" + testBarcodes;
+                    location.href = targetUrl;
                 };
                 function onDeletePoolClick() {
                     const urlParams = new URLSearchParams(window.location.search);
@@ -622,7 +679,7 @@ function writeWellTesting(req, res) {
         let wellBarcode;
         let result;
         for (let i = 0; i < document.getElementsByClassName("well-container").length; i++) {
-          let poolCheck = document.querySelector("#well_check-"+i.toString()).checked;
+          poolCheck = document.querySelector("#well_check-"+i.toString()).checked;
           console.log(poolCheck);
           if(poolCheck) {
             poolBarcode = document.querySelector("#wellTesting_poolBarcode-" + i.toString()).innerHTML;
@@ -638,10 +695,10 @@ function writeWellTesting(req, res) {
         const email = urlParams.get('email');
         const password = urlParams.get('password');
         for (let i = 0; i < document.getElementsByClassName("well-container").length; i++) {
-            let poolCheck = document.querySelector("#well_check-"+i.toString()).checked;
-            let poolBarcode = document.querySelector("#wellTesting_poolBarcode-" + i.toString()).innerHTML;
-            let wellBarcode = document.querySelector("#wellTesting_wellBarcode-" + i.toString()).innerHTML;
-            let result = document.querySelector("#wellTesting_result-" + i.toString()).innerHTML;
+          let poolCheck = document.querySelector("#well_check-" + i.toString()).checked;
+          let poolBarcode = document.querySelector("#wellTesting_poolBarcode-" + i.toString()).innerHTML;
+          let wellBarcode = document.querySelector("#wellTesting_wellBarcode-" + i.toString()).innerHTML;
+          let result = document.querySelector("#wellTesting_result-" + i.toString()).innerHTML;
             console.log(poolCheck);
             if(poolCheck) {
                 var xmlHttp = new XMLHttpRequest();
@@ -788,7 +845,7 @@ function writeTestBarcodes(req, res) {
         `);
   res.end();
 }
-//don't know how to do edit
+
 function editTestBarcodes(req, res) {
   res.writeHead(200, { "Content-Type": "text/html" });
   let query = url.parse(req.url, true).query;
@@ -797,7 +854,96 @@ function editTestBarcodes(req, res) {
   let poolBarcode = query.poolBarcode ? query.poolBarcode : "";
   let testBarcodes = query.testBarcodes ? query.testBarcodes : "";
   let testBarcodeArray = testBarcodes.split("_");
-  let sql = `UPDATE poolmap(testBarcode, poolBarcode) SET poolBarcode`;
+  let sql = `UPDATE welltesting SET  FROM poolmap(testBarcode, poolBarcode) WHERE poolBarcode='${poolBarcode}' AND testBarcode='${testBarcode}'`;
+  let sql2 = `SELECT poolmap(testBarcode, poolBarcode) WHERE poolBarcode='${poolBarcode}' AND testBarcode='${testBarcode}'`;
+  con.query(sql2, function (err, result) {
+    if (err) throw err;
+    console.log(result);
+    console.log(sql);
+    res.write(`
+    <script>
+      location.href = "/labtech/poolMapping?email="+ '${email}' + "&password=" + '${password}';
+      function changeInnerValue() {
+        document.getElementById("poolBarcode").value = ${poolBarcode};
+        var rows = document.getElementsByClassName("btn btn-default");
+        for(let i = 0; i < testBarcodeArray.length; i++) {
+          rows[i].innerHTML = testBarcodeArray[i];
+        }
+      };
+      changeInnerValue();
+    </script>`);
+  });
+}
+
+function editmode_TestBarcodes(req, res) {
+  res.writeHead(200, { "Content-Type": "text/html" });
+  let query = url.parse(req.url, true).query;
+  console.log("arrived to editmode");
+  let email = query.email ? query.email : "";
+  let password = query.password ? query.password : "";
+  let poolBarcode = query.poolBarcode ? query.poolBarcode : "";
+  let testBarcodes = query.testBarcodes ? query.testBarcodes : "";
+  let testBarcodeArray = testBarcodes.split(",");
+  let head = `
+  <html>
+  <script>
+    function editDB(){
+      let wellBarcode = document.querySelector("#wellTesting_inputWellBarcode").value;
+      let poolBarcode = document.querySelector("#wellTesting_inputPoolBarcode").value;
+      let result = document.querySelector("#wellTesting_inputResult").value;
+      var xmlHttp = new XMLHttpRequest();
+      const urlParams = new URLSearchParams(window.location.search);
+      const email = urlParams.get('email');
+      const password = urlParams.get('password');
+      let targetUrl = "/labtech/wellTesting/edit?email=" + email + "&password=" + password + "&wellBarcode=" + wellBarcode + "&poolBarcode=" + poolBarcode + "&result=" + result;
+      xmlHttp.open( "GET", targetUrl, false);
+      location.href = targetUrl;
+    };
+  </script>
+  <body>
+  <h1>
+            Pool Mapping
+        </h1>
+        <b>Pool Barcode: </b>
+        <input type="text" name="search" value="'${poolBarcode}'" id="poolBarcode">
+        <br>
+        <b>Test Barcodes: </b>
+        <table id='pool'>
+        `
+    let body = "";
+    for (let i = 0; i < testBarcodeArray.length; i++) {
+      body+=`
+      <tr>
+        <td>
+          <input type="text" name="code" value="'${testBarcodeArray[i]}'">
+        </td>
+        <td>
+          <button type='button' onclick='delete(this);' class='btn btn-default'>Delete</button>
+        </td>
+      </tr>`
+    }
+
+    let tail =  `
+        </table>
+        <button onclick="onAddMoreRowsClick()">Add more rows</button><br><br>
+        <button onclick="onSubmitPoolClick()">Submit Pool</button>
+        <br>
+        <br>
+        <table id='existingPools'>
+            <tr>
+                <td>
+                </td>
+                <td>
+                    Test Barcodes
+                </td>
+            </tr>
+                </table>
+                <button onclick="onEditPoolClick()">Edit Pool</button>
+                <button onclick="onDeletePoolClick()">Delete Pool</button>
+            </body></html>
+            `;
+    res.write(head + body + tail);
+    res.end();
 }
 
 function deleteTestBarcodes(req, res) {
@@ -822,6 +968,96 @@ function deleteTestBarcodes(req, res) {
   res.end();
 }
 
+function editWellBarcodes(req, res) {
+  res.writeHead(200, { "Content-Type": "text/html" });
+  let query = url.parse(req.url, true).query;
+  let email = query.email ? query.email : "";
+  let password = query.password ? query.password : "";
+  let poolBarcode = query.poolBarcode ? query.poolBarcode : "";
+  let wellBarcode = query.wellBarcode ? query.wellBarcode : "";
+  let result = query.result ? query.result : "";
+  let sql =
+    `UPDATE welltesting SET result = "` +
+    result +
+    `" WHERE poolBarcode = ` +
+    poolBarcode +
+    `;`;
+  con.query(sql, function (err, result) {
+    if (err) throw err;
+    console.log("well updated");
+  });
+  let sql2 =
+    `UPDATE welltesting SET  testingEndTime = NOW() WHERE poolBarcode = ` +
+    poolBarcode +
+    `;`;
+  con.query(sql2, function (err, result) {
+    if (err) throw err;
+    console.log("well updated");
+  });
+  res.write(
+    `<script>location.href="/labtech/wellTesting?email=` +
+      email +
+      `&password=` +
+      password +
+      `";</script>`
+  );
+  res.end();
+}
+
+function deleteWellBarcodes(req, res) {
+  res.writeHead(200, { "Content-Type": "text/html" });
+  let query = url.parse(req.url, true).query;
+  let email = query.email ? query.email : "";
+  let password = query.password ? query.password : "";
+  let wellBarcode = query.wellBarcode ? query.wellBarcode : "";
+  let poolBarcode = query.poolBarcode ? query.poolBarcode : "";
+  let sql = `DELETE FROM wellTesting WHERE poolBarcode='${poolBarcode}' AND wellBarcode='${wellBarcode}'`;
+  con.query(sql, function (err, result) {
+    if (err) throw err;
+    console.log(result);
+    console.log(sql);
+  });
+  res.write(
+    `<script>location.href="/labtech/wellTesting?email=` +
+      email +
+      `&password=` +
+      password +
+      `";</script>`
+  );
+  res.end();
+}
+
+function writeWellBarcodes(req, res) {
+  res.writeHead(200, { "Content-Type": "text/html" });
+  let query = url.parse(req.url, true).query;
+  let email = query.email ? query.email : "";
+  let password = query.password ? query.password : "";
+  let wellBarcode = query.wellBarcode ? query.wellBarcode : "";
+  let poolBarcode = query.poolBarcode ? query.poolBarcode : "";
+  let result = query.result ? query.result : "";
+  let sql = `INSERT INTO well(wellBarcode) VALUES('${wellBarcode}')`;
+  con.query(sql, function (err, resut) {
+    if (err) throw err;
+    console.log("well barcode inserted into well");
+  });
+  //what is testingStartTime and testingEndTime
+  //temporary
+  let sql2 = `INSERT INTO wellTesting(poolBarcode, wellBarcode, testingStartTime, testingEndTime, result) VALUES('${poolBarcode}', '${wellBarcode}', NOW(), NOW(), '${result}')`;
+  con.query(sql2, function (err, result) {
+    if (err) throw err;
+    console.log("everything inserted into wellTesting");
+    console.log(sql);
+  });
+  res.write(
+    `<script>location.href="/labtech/wellTesting?email=` +
+      email +
+      `&password=` +
+      password +
+      `";</script>`
+  );
+  res.end();
+}
+
 function editmode_WellBarcodes(req, res) {
   res.writeHead(200, { "Content-Type": "text/html" });
   let query = url.parse(req.url, true).query;
@@ -830,7 +1066,8 @@ function editmode_WellBarcodes(req, res) {
   let password = query.password ? query.password : "";
   let poolBarcode = query.poolBarcode ? query.poolBarcode : "";
   let wellBarcode = query.wellBarcode ? query.wellBarcode : ""; //이렇게 받아왔고,
-  let html = `
+  let html =
+    `
   <html>
   <script>
     function editDB(){
@@ -849,9 +1086,13 @@ function editmode_WellBarcodes(req, res) {
   <body>
   <h1> Well Testing </h1>
   <b>Well Barcode: </b>
-  <input type="text" value="` + wellBarcode + `" id="wellTesting_inputWellBarcode"><br><br>
+  <input type="text" value="` +
+    wellBarcode +
+    `" id="wellTesting_inputWellBarcode"><br><br>
   <b>Pool Barcode: </b>
-  <input type="text" value="` + poolBarcode + `" id="wellTesting_inputPoolBarcode"><br><br>
+  <input type="text" value="` +
+    poolBarcode +
+    `" id="wellTesting_inputPoolBarcode"><br><br>
   <b>Result: </b>
   <select name="filter" id="wellTesting_inputResult">
       <option>In progress</option>
@@ -887,11 +1128,10 @@ function editmode_WellBarcodes(req, res) {
                     </td>
                         `;
     }
-    //res.write(body);
     html += `
         </table>
         <button>Edit Pool</button>
-        <button">Delete Pool</button>
+        <button>Delete Pool</button>
     </body>
     </html>`;
     res.write(html);
@@ -899,72 +1139,22 @@ function editmode_WellBarcodes(req, res) {
   });
 }
 
-function editWellBarcodes(req, res) {
-  res.writeHead(200, { "Content-Type": "text/html" });
-  let query = url.parse(req.url, true).query;
-  let email = query.email ? query.email : "";
-  let password = query.password ? query.password : "";
-  let poolBarcode = query.poolBarcode ? query.poolBarcode : "";
-  let wellBarcode = query.wellBarcode ? query.wellBarcode : "";
-  let result = query.result ? query.result : "";
-  let sql = `UPDATE welltesting SET result = "` + result + `" WHERE poolBarcode = ` + poolBarcode + `;`;
+/*function changeValuesInTestBarcodes(req, res) {
+  let sql = `SELECT testBarcode FROM poolmap`;
   con.query(sql, function (err, result) {
     if (err) throw err;
-    console.log("well updated");
+    let body = `<script>`;
+    for (let i = 0; i < result.length; i++) {
+      let item = result[i];
+      body += 
+      `function addToTestBarcode${i}() {
+        let current = document.getElementById("putTestBarcodes-${i}").innerHTML;
+        document.getElementById("putTestBarcodes-${i}").innerHTML = current, '${item}';
+      }`;
+    }
+    body+='</script>'
+    console.log("body", body);
+    res.write(body);
+    res.end();
   });
-  let sql2 = `UPDATE welltesting SET  testingEndTime = NOW() WHERE poolBarcode = ` + poolBarcode + `;`;
-  con.query(sql2, function (err, result) {
-    if (err) throw err;
-    console.log("well updated");
-  });
-  res.write(`<script>location.href="/labtech/wellTesting?email=` + email + `&password=` + password + `";</script>`);
-  res.end();
-}
-
-function deleteWellBarcodes(req, res) {
-  res.writeHead(200, { "Content-Type": "text/html" });
-  let query = url.parse(req.url, true).query;
-  let email = query.email ? query.email : "";
-  let password = query.password ? query.password : "";
-  let wellBarcode = query.poolBarcode ? query.wellBarcode : "";
-  let poolBarcode = query.poolBarcode ? query.poolBarcode : "";
-  let sql = `DELETE FROM wellTesting WHERE poolBarcode='${poolBarcode}' AND wellBarcode='${wellBarcode}'`;
-  con.query(sql, function (err, result) {
-    if (err) throw err;
-    console.log(result);
-    console.log(sql);
-  });
-  let sql2 = `DELETE FROM well WHERE wellBarcode = '${wellBarcode}'`;
-  con.query(sql2, function (err, result) {
-    if (err) throw err;
-    console.log(result);
-    console.log(sql);
-  });
-  res.write(`<script>location.href="/labtech/wellTesting?email=` + email + `&password=` + password + `";</script>`);
-  res.end();
-}
-
-function writeWellBarcodes(req, res) {
-  res.writeHead(200, { "Content-Type": "text/html" });
-  let query = url.parse(req.url, true).query;
-  let email = query.email ? query.email : "";
-  let password = query.password ? query.password : "";
-  let wellBarcode = query.wellBarcode ? query.wellBarcode : "";
-  let poolBarcode = query.poolBarcode ? query.poolBarcode : "";
-  let result = query.result ? query.result : "";
-  let sql = `INSERT INTO well(wellBarcode) VALUES('${wellBarcode}')`;
-  con.query(sql, function (err, resut) {
-    if (err) throw err;
-    console.log("well barcode inserted into well");
-  });
-  //what is testingStartTime and testingEndTime
-  //temporary
-  let sql2 = `INSERT INTO wellTesting(poolBarcode, wellBarcode, testingStartTime, testingEndTime, result) VALUES('${poolBarcode}', '${wellBarcode}', NOW(), NOW(), '${result}')`;
-  con.query(sql2, function (err, result) {
-    if (err) throw err;
-    console.log("everything inserted into wellTesting");
-    console.log(sql);
-  });
-  res.write(`<script>location.href="/labtech/wellTesting?email=` + email + `&password=` + password + `";</script>`);
-  res.end();
-}
+}*/
