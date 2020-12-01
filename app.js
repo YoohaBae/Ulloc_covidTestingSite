@@ -934,6 +934,12 @@ function deleteWellBarcodes(req, res) {
     console.log(result);
     console.log(sql);
   });
+  let sql2 = `DELETE FROM well WHERE wellBarcode = '${wellBarcode}'`;
+  con.query(sql2, function (err, result) {
+    if (err) throw err;
+    console.log(result);
+    console.log(sql);
+  });
   res.write(`<script>location.href="/labtech/wellTesting?email=` + email + `&password=` + password + `";</script>`);
   res.end();
 }
