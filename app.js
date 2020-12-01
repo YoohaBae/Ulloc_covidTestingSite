@@ -34,7 +34,7 @@ app.get("/employee", (req, res) => {
   res.sendFile(path.join(__dirname + "/views/employeeLoginPage.html"));
 });
 
-app.get("/employee/results", (req, res) => {
+app.get("/employee_results", (req, res) => {
   writeEmployeeResults(req, res);
 });
 
@@ -210,7 +210,7 @@ app.post("/auth", function (req, res) {
       [user, pw]
     );
     if (table.length > 0) {
-      res.redirect("/employee/results");
+      res.redirect('/employee_results?email=' + user);
     } else {
       res.write(`
                 <script>
