@@ -1,12 +1,3 @@
--- phpMyAdmin SQL Dump
--- version 5.0.3
--- https://www.phpmyadmin.net/
---
--- Host: 127.0.0.1
--- 생성 시간: 20-11-24 15:07
--- 서버 버전: 10.4.14-MariaDB
--- PHP 버전: 7.4.11
-
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
@@ -18,13 +9,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- 데이터베이스: `ulloc_covidtestingdb`
+-- Database: `ulloc_covidtestingdb`
 --
 
 -- --------------------------------------------------------
 
 --
--- 테이블 구조 `employee`
+-- Table structure for table `employee`
 --
 
 CREATE TABLE `employee` (
@@ -35,10 +26,20 @@ CREATE TABLE `employee` (
   `passcode` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `employee`
+--
+
+INSERT INTO `employee` (`employeeID`, `email`, `firstName`, `lastName`, `passcode`) VALUES
+('111', 'ulloc2@gmail.com', 'ulloc2', 'stony2', 'asdf'),
+('222', 'ulloc3@gmail.com', 'ulloc3', 'stony3', 'asdf'),
+('333', 'ulloc4@gmail.com', 'ulloc4', 'stony4', 'asdf'),
+('444', 'ulloc@gmail.com', 'ulloc', 'stony', 'asdf');
+
 -- --------------------------------------------------------
 
 --
--- 테이블 구조 `employeetest`
+-- Table structure for table `employeetest`
 --
 
 CREATE TABLE `employeetest` (
@@ -48,10 +49,28 @@ CREATE TABLE `employeetest` (
   `collectedBy` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `employeetest`
+--
+
+INSERT INTO `employeetest` (`testBarcode`, `employeeID`, `collectionTime`, `collectedBy`) VALUES
+('1', '111', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
+('2', '111', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
+('3', '111', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
+('4', '222', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
+('5', '222', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
+('6', '222', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
+('7', '333', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
+('8', '333', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
+('9', '333', '0000-00-00 00:00:00', 'ullocLab@gmail.com');
+('10', '444', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
+('11', '444', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
+('12', '444', '0000-00-00 00:00:00', 'ullocLab@gmail.com');
+
 -- --------------------------------------------------------
 
 --
--- 테이블 구조 `labemployee`
+-- Table structure for table `labemployee`
 --
 
 CREATE TABLE `labemployee` (
@@ -59,20 +78,35 @@ CREATE TABLE `labemployee` (
   `password` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `labemployee`
+--
+
+INSERT INTO `labemployee` (`labID`, `password`) VALUES
+('ullocLab@gmail.com', '1234');
+
 -- --------------------------------------------------------
 
 --
--- 테이블 구조 `pool`
+-- Table structure for table `pool`
 --
 
 CREATE TABLE `pool` (
   `poolBarcode` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `pool`
+--
+
+INSERT INTO `pool` (`poolBarcode`) VALUES
+('1000'),
+('2000');
+
 -- --------------------------------------------------------
 
 --
--- 테이블 구조 `poolmap`
+-- Table structure for table `poolmap`
 --
 
 CREATE TABLE `poolmap` (
@@ -80,10 +114,22 @@ CREATE TABLE `poolmap` (
   `poolBarcode` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `poolmap`
+--
+
+INSERT INTO `poolmap` (`testBarcode`, `poolBarcode`) VALUES
+('1', '1000'),
+('2', '1000'),
+('3', '1000'),
+('4', '2000'),
+('5', '2000'),
+('6', '2000');
+
 -- --------------------------------------------------------
 
 --
--- 테이블 구조 `well`
+-- Table structure for table `well`
 --
 
 CREATE TABLE `well` (
@@ -93,7 +139,7 @@ CREATE TABLE `well` (
 -- --------------------------------------------------------
 
 --
--- 테이블 구조 `welltesting`
+-- Table structure for table `welltesting`
 --
 
 CREATE TABLE `welltesting` (
@@ -105,17 +151,17 @@ CREATE TABLE `welltesting` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- 덤프된 테이블의 인덱스
+-- Indexes for dumped tables
 --
 
 --
--- 테이블의 인덱스 `employee`
+-- Indexes for table `employee`
 --
 ALTER TABLE `employee`
   ADD PRIMARY KEY (`employeeID`);
 
 --
--- 테이블의 인덱스 `employeetest`
+-- Indexes for table `employeetest`
 --
 ALTER TABLE `employeetest`
   ADD PRIMARY KEY (`testBarcode`),
@@ -123,57 +169,57 @@ ALTER TABLE `employeetest`
   ADD KEY `FK_LabEmployee` (`collectedBy`);
 
 --
--- 테이블의 인덱스 `labemployee`
+-- Indexes for table `labemployee`
 --
 ALTER TABLE `labemployee`
   ADD PRIMARY KEY (`labID`);
 
 --
--- 테이블의 인덱스 `pool`
+-- Indexes for table `pool`
 --
 ALTER TABLE `pool`
   ADD PRIMARY KEY (`poolBarcode`);
 
 --
--- 테이블의 인덱스 `poolmap`
+-- Indexes for table `poolmap`
 --
 ALTER TABLE `poolmap`
   ADD KEY `FK_testBarcode` (`testBarcode`),
   ADD KEY `FK_poolBarcode` (`poolBarcode`);
 
 --
--- 테이블의 인덱스 `well`
+-- Indexes for table `well`
 --
 ALTER TABLE `well`
   ADD PRIMARY KEY (`wellBarcode`);
 
 --
--- 테이블의 인덱스 `welltesting`
+-- Indexes for table `welltesting`
 --
 ALTER TABLE `welltesting`
   ADD KEY `FK_poolBarcode2` (`poolBarcode`),
   ADD KEY `FK_wellBarcode` (`wellBarcode`);
 
 --
--- 덤프된 테이블의 제약사항
+-- Constraints for dumped tables
 --
 
 --
--- 테이블의 제약사항 `employeetest`
+-- Constraints for table `employeetest`
 --
 ALTER TABLE `employeetest`
   ADD CONSTRAINT `FK_LabEmployee` FOREIGN KEY (`collectedBy`) REFERENCES `labemployee` (`labID`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `FK_employeeID` FOREIGN KEY (`employeeID`) REFERENCES `employee` (`employeeID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- 테이블의 제약사항 `poolmap`
+-- Constraints for table `poolmap`
 --
 ALTER TABLE `poolmap`
   ADD CONSTRAINT `FK_poolBarcode` FOREIGN KEY (`poolBarcode`) REFERENCES `pool` (`poolBarcode`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `FK_testBarcode` FOREIGN KEY (`testBarcode`) REFERENCES `employeetest` (`testBarcode`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- 테이블의 제약사항 `welltesting`
+-- Constraints for table `welltesting`
 --
 ALTER TABLE `welltesting`
   ADD CONSTRAINT `FK_poolBarcode2` FOREIGN KEY (`poolBarcode`) REFERENCES `pool` (`poolBarcode`) ON DELETE CASCADE ON UPDATE CASCADE,
