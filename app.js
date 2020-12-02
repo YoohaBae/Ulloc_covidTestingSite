@@ -518,24 +518,38 @@ function writeEmployeeResults(req, res) {
       "SELECT testBarcode, poolBarcode FROM poolmap WHERE testBarcode = ?",
       [testBarcode]
     );
-    let poolBarcode = poolmapdb[0].poolBarcode;
+    console.log(poolmapdb);
+    let poolmapLength2 = poolmapdb.length;
+    console.log("pool map length: " + poolmapLength2);
+    let poolBarcode = poolmapdb[poolmapLength2 - 1].poolBarcode;
     console.log(poolBarcode);
+    let poolmapLength = connection.query(
+      "SELECT poolBarcode FROM poolmap WHERE poolBarcode = ?",
+      [poolBarcode]
+    );
+    let poolLength = poolmapLength.length;
+    console.log("pool length: " + poolLength);
     let welltestingdb = connection.query(
       "SELECT poolBarcode, result FROM welltesting WHERE poolBarcode = ?",
       [poolBarcode]
     );
+    console.log(welltestingdb);
     let result = welltestingdb[0].result;
-    console.log(result);
     html +=
       `
-    <tr>
-      <td>` +
+      <tr>
+        <td>` +
       collectionTime +
-      `</td>
-      <td>` +
-      result +
-      `</td>
-    </tr>`;
+      `</td>`;
+    if (poolLength == 1 && result == 'Positive') {
+      html += `<td> Positive </td><tr>`;
+    }
+    else if (result == 'Negative') {
+      html += `<td> Negative </td><tr>`;
+    }
+    else {
+      html += `<td> In progress </td></tr>`
+    }
   }
   res.write(html + `\n\n</table></body>\n</html>`);
   res.end();
