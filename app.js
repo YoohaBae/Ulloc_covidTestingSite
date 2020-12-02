@@ -1886,7 +1886,7 @@ function editmode_TestBarcodes(req, res) {
   let poolBarcode = query.poolBarcode ? query.poolBarcode : "";
   let testBarcodes = query.testBarcodes ? query.testBarcodes : "";
   let testBarcodeArray = testBarcodes.split(",");
-  let sql = `DELETE FROM pool WHERE poolBarcode=${poolBarcode}`;
+  let sql = `DELETE FROM pool WHERE poolBarcode='${poolBarcode}'`;
   con.query(sql, function (err, result) {
     console.log("deleted pool from database")
   })
