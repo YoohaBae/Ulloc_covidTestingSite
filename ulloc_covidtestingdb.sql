@@ -40,6 +40,9 @@ CREATE TABLE `employee` (
 --
 
 INSERT INTO `employee` (`employeeID`, `email`, `firstName`, `lastName`, `passcode`) VALUES
+('111', 'ulloc2@gmail.com', 'ulloc2', 'stony2', 'asdf'),
+('222', 'ulloc3@gmail.com', 'ulloc3', 'stony3', 'asdf'),
+('333', 'ulloc4@gmail.com', 'ulloc4', 'stony4', 'asdf'),
 ('444', 'ulloc@gmail.com', 'ulloc', 'stony', 'asdf');
 
 -- --------------------------------------------------------
@@ -60,8 +63,19 @@ CREATE TABLE `employeetest` (
 --
 
 INSERT INTO `employeetest` (`testBarcode`, `employeeID`, `collectionTime`, `collectedBy`) VALUES
-('1', '444', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
-('2', '444', '0000-00-00 00:00:00', 'ullocLab@gmail.com');
+('1', '111', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
+('10', '444', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
+('11', '444', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
+('12', '444', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
+('2', '111', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
+('3', '111', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
+('4', '222', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
+('5', '222', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
+('6', '222', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
+('7', '333', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
+('8', '333', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
+('9', '333', '0000-00-00 00:00:00', 'ullocLab@gmail.com');
+
 
 -- --------------------------------------------------------
 
@@ -91,6 +105,9 @@ CREATE TABLE `pool` (
   `poolBarcode` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+INSERT INTO `pool` (`poolBarcode`) VALUES
+('1000'),
+('2000');
 -- --------------------------------------------------------
 
 --
@@ -102,6 +119,13 @@ CREATE TABLE `poolmap` (
   `poolBarcode` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+INSERT INTO `poolmap` (`testBarcode`, `poolBarcode`) VALUES
+('1', '1000'),
+('2', '1000'),
+('3', '1000'),
+('4', '2000'),
+('5', '2000'),
+('6', '2000');
 -- --------------------------------------------------------
 
 --
