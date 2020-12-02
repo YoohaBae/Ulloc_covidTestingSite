@@ -40,16 +40,7 @@ CREATE TABLE `employee` (
 --
 
 INSERT INTO `employee` (`employeeID`, `email`, `firstName`, `lastName`, `passcode`) VALUES
-<<<<<<< HEAD
-('111', 'ulloc2@gmail.com', 'ulloc2', 'stony2', 'asdf'),
-('222', 'ulloc3@gmail.com', 'ulloc3', 'stony3', 'asdf'),
-('333', 'ulloc4@gmail.com', 'ulloc4', 'stony4', 'asdf'),
-('444', 'ulloc@gmail.com', 'ulloc', 'stony', 'asdf');
-=======
-('101010', 'ulloc10@gmail.com', 'ulloc10', 'stony10', 'asdf'),
 ('111', 'ulloc1@gmail.com', 'ulloc1', 'stony1', 'asdf'),
-('111111', 'ulloc11@gmail.com', 'ulloc11', 'stony11', 'asdf'),
-('121212', 'ulloc12@gmail.com', 'ulloc12', 'stony12', 'asdf'),
 ('222', 'ulloc2@gmail.com', 'ulloc2', 'stony2', 'asdf'),
 ('333', 'ulloc3@gmail.com', 'ulloc3', 'stony3', 'asdf'),
 ('444', 'ulloc4@gmail.com', 'ulloc4', 'stony4', 'asdf'),
@@ -57,8 +48,10 @@ INSERT INTO `employee` (`employeeID`, `email`, `firstName`, `lastName`, `passcod
 ('666', 'ulloc6@gmail.com', 'ulloc6', 'stony6', 'asdf'),
 ('777', 'ulloc7@gmail.com', 'ulloc7', 'stony7', 'asdf'),
 ('888', 'ulloc8@gmail.com', 'ulloc8', 'stony8', 'asdf'),
-('999', 'ulloc9@gmail.com', 'ulloc9', 'stony9', 'asdf');
->>>>>>> 48508f7e3a587a2b4c1521b9edb9d98c0225310d
+('999', 'ulloc9@gmail.com', 'ulloc9', 'stony9', 'asdf'),
+('101010', 'ulloc10@gmail.com', 'ulloc10', 'stony10', 'asdf'),
+('111111', 'ulloc11@gmail.com', 'ulloc11', 'stony11', 'asdf'),
+('121212', 'ulloc12@gmail.com', 'ulloc12', 'stony12', 'asdf');
 
 -- --------------------------------------------------------
 
@@ -78,28 +71,13 @@ CREATE TABLE `employeetest` (
 --
 
 INSERT INTO `employeetest` (`testBarcode`, `employeeID`, `collectionTime`, `collectedBy`) VALUES
-<<<<<<< HEAD
-('1', '111', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
-('10', '444', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
-('11', '444', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
-('12', '444', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
-('2', '111', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
-('3', '111', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
-('4', '222', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
-('5', '222', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
-('6', '222', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
-('7', '333', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
-('8', '333', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
-('9', '333', '0000-00-00 00:00:00', 'ullocLab@gmail.com');
+('t1', '111', CURDATE(), 'ulloc1@gmail.com'),
+('t2', '222', CURDATE(), 'ulloc1@gmail.com'),
+('t3', '333', CURDATE(), 'ulloc1@gmail.com'),
+('t4', '444', CURDATE(), 'ulloc1@gmail.com'),
+('t5', '555', CURDATE(), 'ulloc1@gmail.com'),
+('t6', '666', CURDATE(), 'ulloc1@gmail.com');
 
-=======
-('t1', '111', '0000-00-00 00:00:00', 'ulloc1@gmail.com'),
-('t2', '222', '0000-00-00 00:00:00', 'ulloc1@gmail.com'),
-('t3', '333', '0000-00-00 00:00:00', 'ulloc1@gmail.com'),
-('t4', '444', '0000-00-00 00:00:00', 'ulloc1@gmail.com'),
-('t5', '555', '0000-00-00 00:00:00', 'ulloc1@gmail.com'),
-('t6', '666', '0000-00-00 00:00:00', 'ulloc1@gmail.com');
->>>>>>> 48508f7e3a587a2b4c1521b9edb9d98c0225310d
 
 -- --------------------------------------------------------
 
@@ -130,10 +108,7 @@ CREATE TABLE `pool` (
   `poolBarcode` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO `pool` (`poolBarcode`) VALUES
-('1000'),
-('2000');
--- --------------------------------------------------------
+--------------------------------------------
 
 --
 -- Table structure for table `poolmap`
@@ -144,13 +119,6 @@ CREATE TABLE `poolmap` (
   `poolBarcode` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO `poolmap` (`testBarcode`, `poolBarcode`) VALUES
-('1', '1000'),
-('2', '1000'),
-('3', '1000'),
-('4', '2000'),
-('5', '2000'),
-('6', '2000');
 -- --------------------------------------------------------
 
 --
