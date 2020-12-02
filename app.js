@@ -1469,7 +1469,6 @@ function writeLabHome(req, res) {
   });
 }
 
-
 function writePoolMapping(req, res) {
   res.writeHead(200, { "Content-Type": "text/html" });
   let query = url.parse(req.url, true).query;
@@ -1516,7 +1515,16 @@ function writePoolMapping(req, res) {
         <table id='existingPools'>
             <tr>
                 <td>
+                    <button type='button' onclick='delete(this);' class='btn btn-default'>Delete</button>
                 </td>
+            </tr>
+        </table>
+        <button onclick="onAddMoreRowsClick()">Add more rows</button><br><br>
+        <button onclick="onSubmitPoolClick()">Submit Pool</button>
+        <br>
+        <br>
+        <table id='existingPools'>
+            <tr>
                 <td>
                     Test Barcodes
                 </td>
@@ -1578,6 +1586,7 @@ function writePoolMapping(req, res) {
                 };
                 function onSubmitPoolClick() {
                     var poolBarcode = document.querySelector("#poolBarcode").value;
+                  
                     console.log(poolBarcode);
                     var poolBarcodeTable = document.getElementById("pool");
                     var rowLength = poolBarcodeTable.rows.length;
@@ -1612,7 +1621,7 @@ function writePoolMapping(req, res) {
                         testBarcodes = document.querySelector("#test_barcodes-" + i.toString()).innerHTML;
                       }
                     }
-                    let targetUrl = "/labtech/poolMapping/editmode?email=" + email + "&password=" + password + "&poolBarcode=" + wellBarcode + "&testBarcodes=" + testBarcodes;
+                    let targetUrl = "/labtech/poolMapping/editmode?email=" + email + "&password=" + password + "&poolBarcode=" + poolBarcode + "&testBarcodes=" + testBarcodes;
                     location.href = targetUrl;
                 };
                 function onDeletePoolClick() {
@@ -1884,25 +1893,25 @@ function editmode_TestBarcodes(req, res) {
   let head = `
   <html>
   <script>
-  function EditTestBarcodesDB(){
-    let poolBarcode = document.querySelector("#poolBarcode").value;
-    let poolBarcodeTable = document.getElementById("pool");
-    let rowLength = poolBarcodeTable.rows.length;
-    let testBarcodes = "";
-    for (i = 0; i < rowLength; i++) {
-        var poolBarcodeTableCells = poolBarcodeTable.rows.item(i).cells;
-        var testBarcodeCell = poolBarcodeTableCells[0].getElementsByTagName('input')[0].value;
-        console.log(testBarcodeCell);
-        testBarcodes += testBarcodeCell + ",";
+    function EditTestBarcodesDB(){
+      let poolBarcode = document.querySelector("#poolBarcode").value;
+      let poolBarcodeTable = document.getElementById("pool");
+      let rowLength = poolBarcodeTable.rows.length;
+      let testBarcodes = "";
+      for (i = 0; i < rowLength; i++) {
+          var poolBarcodeTableCells = poolBarcodeTable.rows.item(i).cells;
+          var testBarcodeCell = poolBarcodeTableCells[0].getElementsByTagName('input')[0].value;
+          console.log(testBarcodeCell);
+          testBarcodes += testBarcodeCell + ",";
+      }
+      var xmlHttp = new XMLHttpRequest();
+      const urlParams = new URLSearchParams(window.location.search);
+      const email = urlParams.get('email');
+      const password = urlParams.get('password');
+      let targetUrl = "/labtech/poolMapping/edit?email=" + email + "&password=" + password + "&poolBarcode=" + poolBarcode + "&testBarcodes=" + testBarcodes;
+      xmlHttp.open( "GET", targetUrl, false);
+      location.href = targetUrl;
     };
-    var xmlHttp = new XMLHttpRequest();
-    const urlParams = new URLSearchParams(window.location.search);
-    const email = urlParams.get('email');
-    const password = urlParams.get('password');
-    let targetUrl = "/labtech/poolMapping/edit?email=" + email + "&password=" + password + "&wellBarcode=" + wellBarcode + "&poolBarcode=" + poolBarcode + "&result=" + result;
-    xmlHttp.open( "GET", targetUrl, false);
-    location.href = targetUrl;
-  };
   </script>
   <body>
   <h1>
@@ -1926,7 +1935,6 @@ function editmode_TestBarcodes(req, res) {
         </td>
       </tr>`;
   }
-
   let body2 = `
         </table>
         <button onclick="onAddMoreRowsClick()">Add more rows</button><br><br>
@@ -1941,7 +1949,6 @@ function editmode_TestBarcodes(req, res) {
                     Test Barcodes
                 </td>
             </tr>
-                
             `;
   let poolBarcodesDB = connection.query("SELECT * FROM pool");
   let testBarcodesDB;
@@ -1979,29 +1986,29 @@ function editmode_TestBarcodes(req, res) {
   }
   let tail =
     `</table>
-            <button>Edit Pool</button>
-            <button>Delete Pool</button>
-        </body>
-        <script>
-                var index, table = document.getElementById('pool');
-                for (var i = 0; i < table.rows.length; i++) {
-                    table.rows[i].cells[1].onclick = function () {
-                        index = this.parentElement.rowIndex;
-                        table.deleteRow(index);
-                        console.log(index);
-                    };
+      <button>Edit Pool</button>
+      <button>Delete Pool</button>
+        </body >
+      <script>
+        var index, table = document.getElementById('pool');
+                for (var i = 0; i < table.rows.length; {
+          table.rows[i].cells[1].onclick = function () {
+            index = this.parentElement.rowIndex;
+            table.deleteRow(index);
+            console.log(index);
+          };
                 };
                 function onAddMoreRowsClick() {
-                    document.getElementById("pool").insertRow(-1).innerHTML = '<tr><td><input type="text" name="code" value=""></td><td><button type="button" onclick = "delete(this);" class="btn btn-default">Delete</button></td></tr>';
+          document.getElementById("pool").insertRow(-1).innerHTML = '<tr><td><input type="text" name="code" value=""></td><td><button type="button" onclick = "delete(this);" class="btn btn-default">Delete</button></td></tr>';
                 };
                 function onSubmitPoolClick() {
                     var poolBarcode = document.querySelector("#poolBarcode").value;
-                  
+
                     console.log(poolBarcode);
                     var poolBarcodeTable = document.getElementById("pool");
                     var rowLength = poolBarcodeTable.rows.length;
                     var testBarcodes = "";
-                    for (i = 0; i < rowLength; i++) {
+                    for (i = 0; i < rowLength; {
                         var poolBarcodeTableCells = poolBarcodeTable.rows.item(i).cells;
                         var testBarcodeCell = poolBarcodeTableCells[0].getElementsByTagName('input')[0].value;
                         console.log(testBarcodeCell);
@@ -2023,11 +2030,11 @@ function editmode_TestBarcodes(req, res) {
                     let poolBarcode;
                     let testBarcodes = "";
                     let result;
-                    for (let i = 0; i < document.getElementsByClassName("pool-container").length; i++) {
-                      poolCheck = document.querySelector("#pool_check-"+i.toString()).checked;
+                    for (let i = 0; i < document.getElementsByClassName({
+          poolCheck = document.querySelector("#pool_check-" + i.toString()).checked;
                       console.log(poolCheck);
                       if(poolCheck) {
-                        poolBarcode = document.querySelector("#pool_barcode-" + i.toString()).innerHTML;
+          poolBarcode = document.querySelector("#pool_barcode-" + i.toString()).innerHTML;
                         testBarcodes = document.querySelector("#test_barcodes-" + i.toString()).innerHTML;
                       }
                     }
@@ -2038,8 +2045,8 @@ function editmode_TestBarcodes(req, res) {
                     const urlParams = new URLSearchParams(window.location.search);
                     const email = urlParams.get('email');
                     const password = urlParams.get('password');
-                    for (let i = 0; i < document.getElementsByClassName("pool-container").length; i++) {
-                        let poolCheck = document.querySelector("#pool_check-" + i).checked;
+                    for (let i = 0; i < document.getElementsByClassName({
+          let poolCheck = document.querySelector("#pool_check-" + i).checked;
                         let poolBarcode = document.querySelector("#pool_barcode-" + i).innerHTML;
                         console.log(poolCheck);
                         if(poolCheck) {
@@ -2052,7 +2059,7 @@ function editmode_TestBarcodes(req, res) {
                     location.href = "/labtech/poolMapping?email=" + email + "&password=" + password;
                 };
             </script>
-            </html>`
+            </html > `
   res.write(head + body + body2 + body3 + tail);
   res.end();
 }
@@ -2065,17 +2072,17 @@ function deleteTestBarcodes(req, res) {
   let poolBarcode = query.poolBarcode ? query.poolBarcode : "";
   let testBarcodes = query.testBarcodes ? query.testBarcodes : "";
   let testBarcodeArray = testBarcodes.split(",");
-  let sql = `DELETE FROM pool WHERE poolBarcode='${poolBarcode}'`;
+  let sql = `DELETE FROM pool WHERE poolBarcode = '${poolBarcode}'`;
   con.query(sql, function (err, result) {
     if (err) throw err;
     console.log(result);
     console.log(sql);
   });
   res.write(`
-    <script>
-    location.href="/labtech/testCollection?email="+ '${email}' + "&password=" + '${password}';
-    </script>
-  `);
+      < script >
+      location.href="/labtech/testCollection?email=" + '${email}' + "&password=" + '${password}';
+    </script >
+      `);
   res.end();
 }
 

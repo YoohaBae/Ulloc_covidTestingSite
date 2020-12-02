@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 29, 2020 at 01:27 PM
+-- Generation Time: Dec 02, 2020 at 01:17 PM
 -- Server version: 10.4.16-MariaDB
 -- PHP Version: 7.4.12
 
@@ -40,10 +40,25 @@ CREATE TABLE `employee` (
 --
 
 INSERT INTO `employee` (`employeeID`, `email`, `firstName`, `lastName`, `passcode`) VALUES
+<<<<<<< HEAD
 ('111', 'ulloc2@gmail.com', 'ulloc2', 'stony2', 'asdf'),
 ('222', 'ulloc3@gmail.com', 'ulloc3', 'stony3', 'asdf'),
 ('333', 'ulloc4@gmail.com', 'ulloc4', 'stony4', 'asdf'),
 ('444', 'ulloc@gmail.com', 'ulloc', 'stony', 'asdf');
+=======
+('101010', 'ulloc10@gmail.com', 'ulloc10', 'stony10', 'asdf'),
+('111', 'ulloc1@gmail.com', 'ulloc1', 'stony1', 'asdf'),
+('111111', 'ulloc11@gmail.com', 'ulloc11', 'stony11', 'asdf'),
+('121212', 'ulloc12@gmail.com', 'ulloc12', 'stony12', 'asdf'),
+('222', 'ulloc2@gmail.com', 'ulloc2', 'stony2', 'asdf'),
+('333', 'ulloc3@gmail.com', 'ulloc3', 'stony3', 'asdf'),
+('444', 'ulloc4@gmail.com', 'ulloc4', 'stony4', 'asdf'),
+('555', 'ulloc5@gmail.com', 'ulloc5', 'stony5', 'asdf'),
+('666', 'ulloc6@gmail.com', 'ulloc6', 'stony6', 'asdf'),
+('777', 'ulloc7@gmail.com', 'ulloc7', 'stony7', 'asdf'),
+('888', 'ulloc8@gmail.com', 'ulloc8', 'stony8', 'asdf'),
+('999', 'ulloc9@gmail.com', 'ulloc9', 'stony9', 'asdf');
+>>>>>>> 48508f7e3a587a2b4c1521b9edb9d98c0225310d
 
 -- --------------------------------------------------------
 
@@ -63,6 +78,7 @@ CREATE TABLE `employeetest` (
 --
 
 INSERT INTO `employeetest` (`testBarcode`, `employeeID`, `collectionTime`, `collectedBy`) VALUES
+<<<<<<< HEAD
 ('1', '111', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
 ('10', '444', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
 ('11', '444', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
@@ -76,6 +92,14 @@ INSERT INTO `employeetest` (`testBarcode`, `employeeID`, `collectionTime`, `coll
 ('8', '333', '0000-00-00 00:00:00', 'ullocLab@gmail.com'),
 ('9', '333', '0000-00-00 00:00:00', 'ullocLab@gmail.com');
 
+=======
+('t1', '111', '0000-00-00 00:00:00', 'ulloc1@gmail.com'),
+('t2', '222', '0000-00-00 00:00:00', 'ulloc1@gmail.com'),
+('t3', '333', '0000-00-00 00:00:00', 'ulloc1@gmail.com'),
+('t4', '444', '0000-00-00 00:00:00', 'ulloc1@gmail.com'),
+('t5', '555', '0000-00-00 00:00:00', 'ulloc1@gmail.com'),
+('t6', '666', '0000-00-00 00:00:00', 'ulloc1@gmail.com');
+>>>>>>> 48508f7e3a587a2b4c1521b9edb9d98c0225310d
 
 -- --------------------------------------------------------
 
@@ -93,7 +117,8 @@ CREATE TABLE `labemployee` (
 --
 
 INSERT INTO `labemployee` (`labID`, `password`) VALUES
-('ullocLab@gmail.com', '1234');
+('ulloc1@gmail.com', 'asdf'),
+('ulloc2@gmail.com', 'asdf');
 
 -- --------------------------------------------------------
 
