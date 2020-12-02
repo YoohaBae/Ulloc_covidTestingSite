@@ -6,8 +6,6 @@ const path = require("path");
 const mysql = require("mysql");
 const session = require("express-session");
 const bodyParser = require("body-parser");
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
 const sync_mysql = require("sync-mysql");
 const { Console } = require("console");
 const connection = new sync_mysql({
@@ -37,7 +35,7 @@ app.get("/employee", (req, res) => {
   res.sendFile(path.join(__dirname + "/views/employeeLoginPage.html"));
 });
 
-app.get("/employee_results", (req, res) => {
+app.get("/employee/results", (req, res) => {
   writeEmployeeResults(req, res);
 });
 
@@ -213,7 +211,7 @@ app.post("/auth", function (req, res) {
       [user, pw]
     );
     if (table.length > 0) {
-      res.redirect('/employee_results?email=' + user);
+      res.redirect("/employee/results");
     } else {
       res.write(`
                 <script>
@@ -275,12 +273,6 @@ function writeEmployeeResults(req, res) {
     );
     let poolBarcode = poolmapdb[0].poolBarcode;
     console.log(poolBarcode);
-    let poolmapLength = connection.query(
-      "SELECT poolBarcode FROM poolmap WHERE poolBarcode = ?",
-      [poolBarcode]
-    );
-    let poolLength = poolmapLength.length;
-    console.log("pool length: " + poolLength);
     let welltestingdb = con.query(
       "SELECT poolBarcode, result FROM welltesting WHERE poolBarcode = ?",
       [poolBarcode]
@@ -289,19 +281,14 @@ function writeEmployeeResults(req, res) {
     console.log(result);
     html +=
       `
-      <tr>
-        <td>` +
+    <tr>
+      <td>` +
       collectionTime +
-      `</td>`;
-    if (poolLength == 1 && result == 'Positive') {
-      html += `<td> Positive </td><tr>`;
-    }
-    else if (result == 'Negative') {
-      html += `<td> Negative </td><tr>`;
-    }
-    else {
-      html += `<td> In progress </td></tr>`
-    }
+      `</td>
+      <td>` +
+      result +
+      `</td>
+    </tr>`;
   }
   res.write(html + `\n\n</table></body>\n</html>`);
   res.end();
@@ -518,38 +505,24 @@ function writeEmployeeResults(req, res) {
       "SELECT testBarcode, poolBarcode FROM poolmap WHERE testBarcode = ?",
       [testBarcode]
     );
-    console.log(poolmapdb);
-    let poolmapLength2 = poolmapdb.length;
-    console.log("pool map length: " + poolmapLength2);
-    let poolBarcode = poolmapdb[poolmapLength2 - 1].poolBarcode;
+    let poolBarcode = poolmapdb[0].poolBarcode;
     console.log(poolBarcode);
-    let poolmapLength = connection.query(
-      "SELECT poolBarcode FROM poolmap WHERE poolBarcode = ?",
-      [poolBarcode]
-    );
-    let poolLength = poolmapLength.length;
-    console.log("pool length: " + poolLength);
     let welltestingdb = connection.query(
       "SELECT poolBarcode, result FROM welltesting WHERE poolBarcode = ?",
       [poolBarcode]
     );
-    console.log(welltestingdb);
     let result = welltestingdb[0].result;
+    console.log(result);
     html +=
       `
-      <tr>
-        <td>` +
+    <tr>
+      <td>` +
       collectionTime +
-      `</td>`;
-    if (poolLength == 1 && result == 'Positive') {
-      html += `<td> Positive </td><tr>`;
-    }
-    else if (result == 'Negative') {
-      html += `<td> Negative </td><tr>`;
-    }
-    else {
-      html += `<td> In progress </td></tr>`
-    }
+      `</td>
+      <td>` +
+      result +
+      `</td>
+    </tr>`;
   }
   res.write(html + `\n\n</table></body>\n</html>`);
   res.end();
@@ -1185,7 +1158,7 @@ function editWellBarcodes(req, res) {
     console.log("well updated");
   });
   let sql2 =
-    `UPDATE welltesting SET  testingEndTime = CURDATE() WHERE poolBarcode = ` +
+    `UPDATE welltesting SET  testingEndTime = NOW() WHERE poolBarcode = ` +
     poolBarcode +
     `;`;
   con.query(sql2, function (err, result) {
@@ -1215,12 +1188,6 @@ function deleteWellBarcodes(req, res) {
     console.log(result);
     console.log(sql);
   });
-  let sql2 = `DELETE FROM well WHERE wellBarcode = '${wellBarcode}'`;
-  con.query(sql2, function (err, result) {
-    if (err) throw err;
-    console.log(result);
-    console.log(sql);
-  });
   res.write(
     `<script>location.href="/labtech/wellTesting?email=` +
       email +
@@ -1246,7 +1213,7 @@ function writeWellBarcodes(req, res) {
   });
   //what is testingStartTime and testingEndTime
   //temporary
-  let sql2 = `INSERT INTO wellTesting(poolBarcode, wellBarcode, testingStartTime, testingEndTime, result) VALUES('${poolBarcode}', '${wellBarcode}', CURDATE(), CURDATE(), '${result}')`;
+  let sql2 = `INSERT INTO wellTesting(poolBarcode, wellBarcode, testingStartTime, testingEndTime, result) VALUES('${poolBarcode}', '${wellBarcode}', NOW(), NOW(), '${result}')`;
   con.query(sql2, function (err, result) {
     if (err) throw err;
     console.log("everything inserted into wellTesting");
