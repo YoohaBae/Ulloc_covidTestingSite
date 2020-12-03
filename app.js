@@ -1105,7 +1105,27 @@ function writeMainPage(req, res) {
     <html><!DOCTYPE html>
     <head>
         <style>
-    
+        h2 {
+          text-align: center;
+      }
+      body {
+          font-family: Arial, Helvetica, sans-serif;
+          display : flex;
+          align-items: center;
+          justify-content: center;
+      }
+      /* Set a style for all buttons */
+      button {
+          background-color: white;
+          color: black;
+          padding: 14px 20px;
+          margin: 8px;
+          border: 4px solid #000000;
+          cursor: pointer;
+          font-style: bold;
+          margin-left: 1rem;
+          margin-top: 3rem;
+      }
         </style>
     </head>
     
@@ -1123,40 +1143,47 @@ function writeLoginPage(req, res) {
   let query = url.parse(req.url, true).query;
   let html = `<!DOCTYPE html>
     <html>
-    
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <style>
-            h2 {
-                text-align: center;
-            }
-    
-            body {
-                font-family: Arial, Helvetica, sans-serif;
-            }
-    
-            /* Full-width input fields */
-            input[type=text],
-            input[type=password] {
-                width: 20%;
-                padding: 12px 20px;
-                margin: 8px 0;
-                border: 4px solid #000000;
-                box-sizing: border-box;
-                align-items: center;
-            }
-    
-            /* Set a style for all buttons */
-            button {
-                background-color: white;
-                color: black;
-                padding: 14px 20px;
-                margin: 8px 0;
-                border: 4px solid #000000;
-                cursor: pointer;
-                font-style: bold;
-            }
-        </style>
+        h2 {
+          text-align: center;
+      }
+      body {
+          font-family: Arial, Helvetica, sans-serif;
+          text-align: center;
+      }
+      /* Full-width input fields */
+      input[type=text],
+      input[type=password] {
+          width: 20%;
+          padding: 12px 20px;
+          margin: 8px 0;
+          border: 4px solid #000000;
+          box-sizing: border-box;
+          align-items: center;
+      }
+      .container {
+          align-items: center;
+          justify-content: center;
+      }
+
+      /* Set a style for all buttons */
+      button {
+          background-color: white;
+          color: black;
+          padding: 14px 20px;
+          margin: 8px 0;
+          border: 4px solid #000000;
+          cursor: pointer;
+          font-style: bold;
+      }
+      #back{
+      margin-top: 10rem;
+      width: 100;
+      height: 50;
+  }
+    </style>
     </head>
     
     <body>
@@ -1230,13 +1257,34 @@ function writeEmployeeResults(req, res) {
   <head>
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <style>
-          h2 {
-              text-align: center;
-          }
-  
-          body {
-              font-family: Arial, Helvetica, sans-serif;
-          }
+      h3 {
+        text-align: center;
+    }
+
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        text-align: center;
+        align-items: center;
+        justify-content: center;
+        font-style: bold;
+    }
+
+    table {
+        width: 600px;
+        border-collapse: collapse;
+        border: 4px solid #000000;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+    }
+
+    th,
+    td {
+        padding: 5px 7px;
+        font-weight: bold;
+        border: 4px solid #000000;
+        width: 300px;
+    }
       </style>
   </head>
   
@@ -1346,6 +1394,93 @@ function writeTestCollection(req, res) {
         <!DOCTYPE html>
         <html lang="en">
         <head>
+        <style>
+        h3 {
+          text-align: center;
+      }
+      body {
+          font-family: Arial, Helvetica, sans-serif;
+          text-align: center;
+          align-items: center;
+          justify-content: center;
+          font-style: bold;
+      }
+
+      input[type=text] {
+          width: 20%;
+          padding: 12px 20px;
+          border: 4px solid #000000;
+          box-sizing: border-box;
+          align-items: center;
+      }
+
+      select {
+          border: 4px solid #000000;
+          box-sizing: border-box;
+          width: 200;
+          height: 50;
+          font-size: 15px;
+          font-weight: bold;
+          color: black;
+          padding: 12px 12px;
+          margin: 8px 0;
+          cursor: pointer;
+      }
+
+      table {
+          width: 600px;
+          border-collapse: collapse;
+          border: 4px solid #000000;
+          align-items: center;
+          justify-content: center;
+          margin: 0 auto;
+      }
+
+      th,
+      td {
+          border: 4px solid #444444;
+          padding: 5px 7px;
+          font-weight: bold;
+          text-align: left;
+      }
+
+      input[type=checkbox] {
+          border: 4px solid #000000;
+          box-sizing: border-box;
+          margin: 5px;
+          align-items: center;
+      }
+
+      button {
+          width: 150px;
+          background-color: white;
+          color: black;
+          vertical-align: middle;
+          border: 4px solid #000000;
+          cursor: pointer;
+          text-align: left;
+          font-weight: bold;
+          font-size: 15px;
+      }
+
+      #idid {
+          font-size: 15px;
+          font-weight: bold;
+          text-align: center;
+          vertical-align: middle;
+          width: 60;
+          height: 30;
+      }
+      #idid2{
+          padding: 7px 7px;
+      }
+
+      #back{
+          margin-top: 10rem;
+          width: 100;
+          height: 50;
+      }
+        </style>
         <script>
                     function deleteBarcode() {
                         const urlParams = new URLSearchParams(window.location.search);
@@ -1447,7 +1582,35 @@ function writeLabHome(req, res) {
           let html = `
           <html>
     <style>
-    
+    h2 {
+      text-align: center;
+  }
+  body {
+      font-family: Arial, Helvetica, sans-serif;
+      text-align: center;
+      align-items: center;
+      justify-content: center;
+      margin-left: 1rem;
+      margin-top: 3rem;
+  }
+  /* Set a style for all buttons */
+  button {
+      background-color: white;
+      color: black;
+      width: 300;
+      height: 50;
+      margin: 8px;
+      border: 4px solid #000000;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 20px;
+  }
+  
+  #back{
+      margin-top: 10rem;
+      width: 100;
+      height: 50;
+  }
     </style>
     
     <body>
@@ -1487,6 +1650,116 @@ function writePoolMapping(req, res) {
   let query = url.parse(req.url, true).query;
   con.connect(function (err) {
     let head = `<html>
+    <style>
+    h3 {
+      text-align: center;
+  }
+
+  body {
+      font-family: Arial, Helvetica, sans-serif;
+      text-align: center;
+      align-items: center;
+      justify-content: center;
+      font-style: bold;
+  }
+
+  input[type=text] {
+      width: 300px;
+      height: 40px;
+      border: 4px solid #000000;
+      box-sizing: border-box;
+      align-items: center;
+  }
+
+  select {
+      border: 4px solid #000000;
+      box-sizing: border-box;
+      width: 200;
+      height: 50;
+      font-size: 15px;
+      font-weight: bold;
+      color: black;
+      padding: 12px 12px;
+      margin: 8px 0;
+      cursor: pointer;
+  }
+
+  input[type=submit] {
+      background-color: white;
+      color: black;
+      border: 4px solid #000000;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: bold;
+      text-align: center;
+      vertical-align: middle;
+      width: 60;
+      height: 30;
+  }
+  
+
+  table {
+      width: 600px;
+      border-collapse: collapse;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto;
+  }
+
+  .class1{
+      align-items: center;
+      justify-content: center;
+      /*display: inline-block; */
+  }
+
+  .class2 {
+      width: 700px;
+      border: 4px solid #000000;
+      align-items: center;
+      justify-content: center;
+      margin: auto;
+  }
+
+  th,
+  td {
+      padding: 5px 7px;
+      font-weight: bold;
+  }
+
+  #existingPools th, #existingPools td{
+      border: 4px solid #000000;
+      border-collapse: collapse;
+  }
+
+  input[type=checkbox] {
+      border: 4px solid #000000;
+      box-sizing: border-box;
+      margin: 5px;
+      align-items: center;
+  }
+
+  button {
+      width: 150px;
+      background-color: white;
+      color: black;
+      padding: 7px 7px;
+      border: 4px solid #000000;
+      cursor: pointer;
+      text-align: left;
+      font-weight: bold;
+      font-size: 15px;
+  }
+  span{
+      display:inline-block;
+      font-weight: bold;
+      
+  }
+  #back{
+          margin-top: 10rem;
+          width: 100;
+          height: 50;
+  }
+    </style>
     <body>
         <h1>
             Pool Mapping
@@ -1667,6 +1940,85 @@ function writeWellTesting(req, res) {
   con.connect(function (err) {
     let head = `<!DOCTYPE html>
     <html>
+    <style>
+    h3 {
+      text-align: center;
+  }
+  body {
+      font-family: Arial, Helvetica, sans-serif;
+      text-align: center;
+      align-items: center;
+      justify-content: center;
+      font-style: bold;
+  }
+  input[type=text]{
+      width: 20%;
+      padding: 12px 20px;
+      border: 4px solid #000000;
+      box-sizing: border-box;
+      align-items: center;
+  }
+  select {
+      border: 4px solid #000000;
+      box-sizing: border-box;
+      width: 200;
+      height: 50;
+      font-size: 15px;
+      font-weight: bold;
+      color: black;
+      padding: 12px 12px;
+      margin: 8px 0;
+      cursor: pointer;
+  }
+  input[type=submit]{
+      background-color: white;
+      color: black;
+      border: 4px solid #000000;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: bold;
+      text-align: center;
+      vertical-align: middle;
+      width: 60;
+      height: 30;
+  }
+  table {
+      width: 600px;
+      border-collapse: collapse;
+      border: 4px solid #000000;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto;
+  }
+  th, td {
+      border: 4px solid #444444;
+      padding: 5px 7px;
+      font-weight: bold;
+  }
+  input[type=checkbox] {
+      border: 4px solid #000000;
+      box-sizing: border-box;
+      margin: 5px;
+      align-items: center;
+  }
+  button {
+      width: 150px;
+      background-color: white;
+      color: black;
+      padding: 7px 7px;
+      margin: 8px;
+      border: 4px solid #000000;
+      cursor: pointer;
+      text-align: left;
+      font-weight: bold;
+      font-size: 15px;
+  }
+  #back{
+  margin-top: 10rem;
+  width: 100;
+  height: 50;
+}
+    </style>
     <head>
     <script>
     function onWellTestingAddClick() {
@@ -1905,6 +2257,116 @@ function editmode_TestBarcodes(req, res) {
   })
   let head = `
   <html>
+  <style>
+  h3 {
+    text-align: center;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    font-style: bold;
+}
+
+input[type=text] {
+    width: 300px;
+    height: 40px;
+    border: 4px solid #000000;
+    box-sizing: border-box;
+    align-items: center;
+}
+
+select {
+    border: 4px solid #000000;
+    box-sizing: border-box;
+    width: 200;
+    height: 50;
+    font-size: 15px;
+    font-weight: bold;
+    color: black;
+    padding: 12px 12px;
+    margin: 8px 0;
+    cursor: pointer;
+}
+
+input[type=submit] {
+    background-color: white;
+    color: black;
+    border: 4px solid #000000;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+    text-align: center;
+    vertical-align: middle;
+    width: 60;
+    height: 30;
+}
+
+
+table {
+    width: 600px;
+    border-collapse: collapse;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+.class1{
+    align-items: center;
+    justify-content: center;
+    /*display: inline-block; */
+}
+
+.class2 {
+    width: 700px;
+    border: 4px solid #000000;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+}
+
+th,
+td {
+    padding: 5px 7px;
+    font-weight: bold;
+}
+
+#existingPools th, #existingPools td{
+    border: 4px solid #000000;
+    border-collapse: collapse;
+}
+
+input[type=checkbox] {
+    border: 4px solid #000000;
+    box-sizing: border-box;
+    margin: 5px;
+    align-items: center;
+}
+
+button {
+    width: 150px;
+    background-color: white;
+    color: black;
+    padding: 7px 7px;
+    border: 4px solid #000000;
+    cursor: pointer;
+    text-align: left;
+    font-weight: bold;
+    font-size: 15px;
+}
+span{
+    display:inline-block;
+    font-weight: bold;
+    
+}
+#back{
+        margin-top: 10rem;
+        width: 100;
+        height: 50;
+}
+  </style>
   <script>
     function EditTestBarcodesDB(){
       let poolBarcode = document.querySelector("#poolBarcode").value;
@@ -2206,6 +2668,85 @@ function editmode_WellBarcodes(req, res) {
   let html =
     `
   <html>
+  <style>
+  h3 {
+    text-align: center;
+}
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    font-style: bold;
+}
+input[type=text]{
+    width: 20%;
+    padding: 12px 20px;
+    border: 4px solid #000000;
+    box-sizing: border-box;
+    align-items: center;
+}
+select {
+    border: 4px solid #000000;
+    box-sizing: border-box;
+    width: 200;
+    height: 50;
+    font-size: 15px;
+    font-weight: bold;
+    color: black;
+    padding: 12px 12px;
+    margin: 8px 0;
+    cursor: pointer;
+}
+input[type=submit]{
+    background-color: white;
+    color: black;
+    border: 4px solid #000000;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+    text-align: center;
+    vertical-align: middle;
+    width: 60;
+    height: 30;
+}
+table {
+    width: 600px;
+    border-collapse: collapse;
+    border: 4px solid #000000;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+}
+th, td {
+    border: 4px solid #444444;
+    padding: 5px 7px;
+    font-weight: bold;
+}
+input[type=checkbox] {
+    border: 4px solid #000000;
+    box-sizing: border-box;
+    margin: 5px;
+    align-items: center;
+}
+button {
+    width: 150px;
+    background-color: white;
+    color: black;
+    padding: 7px 7px;
+    margin: 8px;
+    border: 4px solid #000000;
+    cursor: pointer;
+    text-align: left;
+    font-weight: bold;
+    font-size: 15px;
+}
+#back{
+margin-top: 10rem;
+width: 100;
+height: 50;
+}
+  </style>
   <script>
     function editDB(){
       let wellBarcode = document.querySelector("#wellTesting_inputWellBarcode").value;
