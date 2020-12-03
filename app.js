@@ -1007,7 +1007,7 @@ const connection = new sync_mysql({
   host: 'localhost',
   user: 'me2',
   password: 'iamgroot',
-  database: 'project3'
+  database: 'project4'
 });
 const con = mysql.createConnection({
   // host: "localhost",
@@ -1018,7 +1018,7 @@ const con = mysql.createConnection({
   host: 'localhost',
   user: 'me2',
   password: 'iamgroot',
-  database: 'project3'
+  database: 'project4'
 });
 
 app.get("/", (req, res) => {
