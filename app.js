@@ -208,6 +208,7 @@ function writeLoginPage(req, res) {
     
             <button type="button" onclick= "onLoginCollectorClick()"><b>Login Collector</b></button>
             <button type="button" onclick="onLabLoginClick()"><b>Lab Login</b></button>
+            <br><button id='back' onclick="location.href='/'">BACK</button>
         </div>
         <script>
             function onLoginCollectorClick() {
