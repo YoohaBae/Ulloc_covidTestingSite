@@ -179,7 +179,6 @@ function writeLoginPage(req, res) {
           align-items: center;
           justify-content: center;
       }
-
       /* Set a style for all buttons */
       button {
           background-color: white;
@@ -272,7 +271,6 @@ function writeEmployeeResults(req, res) {
       h3 {
         text-align: center;
     }
-
     body {
         font-family: Arial, Helvetica, sans-serif;
         text-align: center;
@@ -280,7 +278,6 @@ function writeEmployeeResults(req, res) {
         justify-content: center;
         font-style: bold;
     }
-
     table {
         width: 600px;
         border-collapse: collapse;
@@ -289,7 +286,6 @@ function writeEmployeeResults(req, res) {
         justify-content: center;
         margin: 0 auto;
     }
-
     th,
     td {
         padding: 5px 7px;
@@ -417,7 +413,6 @@ function writeTestCollection(req, res) {
           justify-content: center;
           font-style: bold;
       }
-
       input[type=text] {
           width: 20%;
           padding: 12px 20px;
@@ -425,7 +420,6 @@ function writeTestCollection(req, res) {
           box-sizing: border-box;
           align-items: center;
       }
-
       select {
           border: 4px solid #000000;
           box-sizing: border-box;
@@ -438,7 +432,6 @@ function writeTestCollection(req, res) {
           margin: 8px 0;
           cursor: pointer;
       }
-
       table {
           width: 600px;
           border-collapse: collapse;
@@ -447,7 +440,6 @@ function writeTestCollection(req, res) {
           justify-content: center;
           margin: 0 auto;
       }
-
       th,
       td {
           border: 4px solid #444444;
@@ -455,14 +447,12 @@ function writeTestCollection(req, res) {
           font-weight: bold;
           text-align: left;
       }
-
       input[type=checkbox] {
           border: 4px solid #000000;
           box-sizing: border-box;
           margin: 5px;
           align-items: center;
       }
-
       button {
           width: 150px;
           background-color: white;
@@ -474,7 +464,6 @@ function writeTestCollection(req, res) {
           font-weight: bold;
           font-size: 15px;
       }
-
       #idid {
           font-size: 15px;
           font-weight: bold;
@@ -486,7 +475,6 @@ function writeTestCollection(req, res) {
       #idid2{
           padding: 7px 7px;
       }
-
       #back{
           margin-top: 10rem;
           width: 100;
@@ -524,6 +512,13 @@ function writeTestCollection(req, res) {
                         xmlHttp.open( "GET", targetUrl, false ); // false for synchronous request;
                         location.href = targetUrl;
                     };
+                    function onTestCollectionBackClick() {
+                      const urlParams = new URLSearchParams(window.location.search);
+                      const email = urlParams.get('email');
+                      const password = urlParams.get('password');
+                      location.href = "/labtech?email="+email+"&password="+password;
+                      }
+                      
                 </script>
         </head>
         <body>
@@ -557,7 +552,7 @@ function writeTestCollection(req, res) {
 
             let tail = `</table>
                 <button onclick="deleteBarcode()">Delete</button>
-                <br><button id='back' onclick="location.href='/labtech'">BACK</button>
+                <br><button id='back' onclick="onTestCollectionBackClick()">BACK</button>
                 </body>
                 </html>
                 `;
@@ -668,7 +663,6 @@ function writePoolMapping(req, res) {
     h3 {
       text-align: center;
   }
-
   body {
       font-family: Arial, Helvetica, sans-serif;
       text-align: center;
@@ -676,7 +670,6 @@ function writePoolMapping(req, res) {
       justify-content: center;
       font-style: bold;
   }
-
   input[type=text] {
       width: 300px;
       height: 40px;
@@ -684,7 +677,6 @@ function writePoolMapping(req, res) {
       box-sizing: border-box;
       align-items: center;
   }
-
   select {
       border: 4px solid #000000;
       box-sizing: border-box;
@@ -697,7 +689,6 @@ function writePoolMapping(req, res) {
       margin: 8px 0;
       cursor: pointer;
   }
-
   input[type=submit] {
       background-color: white;
       color: black;
@@ -711,7 +702,6 @@ function writePoolMapping(req, res) {
       height: 30;
   }
   
-
   table {
       width: 600px;
       border-collapse: collapse;
@@ -719,13 +709,11 @@ function writePoolMapping(req, res) {
       justify-content: center;
       margin: 0 auto;
   }
-
   .class1{
       align-items: center;
       justify-content: center;
       /*display: inline-block; */
   }
-
   .class2 {
       width: 700px;
       border: 4px solid #000000;
@@ -733,25 +721,21 @@ function writePoolMapping(req, res) {
       justify-content: center;
       margin: auto;
   }
-
   th,
   td {
       padding: 5px 7px;
       font-weight: bold;
   }
-
   #existingPools th, #existingPools td{
       border: 4px solid #000000;
       border-collapse: collapse;
   }
-
   input[type=checkbox] {
       border: 4px solid #000000;
       box-sizing: border-box;
       margin: 5px;
       align-items: center;
   }
-
   button {
       width: 150px;
       background-color: white;
@@ -871,6 +855,7 @@ function writePoolMapping(req, res) {
                 </table>
                 <button onclick="onEditPoolClick()">Edit Pool</button>
                 <button onclick="onDeletePoolClick()">Delete Pool</button>
+                <br><button id='back' onclick="onPoolMappingBackClick()">BACK</button>
             </body>
             <script>
                 var index, table = document.getElementById('pool');
@@ -940,6 +925,12 @@ function writePoolMapping(req, res) {
                         }
                     }
                     location.href = "/labtech/poolMapping?email=" + email + "&password=" + password;
+                };
+                function onPoolMappingBackClick() {
+                  const urlParams = new URLSearchParams(window.location.search);
+                  const email = urlParams.get('email');
+                  const password = urlParams.get('password');
+                  location.href = "/labetech?email="+email+"&password="+password;
                 };
             </script>
             </html>`;
@@ -1086,6 +1077,13 @@ function writeWellTesting(req, res) {
         }
         location.href = "/labtech/wellTesting?email=" + email + "&password=" + password;
     };
+    function onWellTestingBackClick() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const email = urlParams.get('email');
+      const password = urlParams.get('password');
+      location.href = "/labetch?email="+email+"&password="+password;
+    };
+      
 </script>
 </head>
     <body>
@@ -1135,6 +1133,8 @@ function writeWellTesting(req, res) {
         </table>
         <button onclick="onWellTestingEditPoolClick()">Edit Pool</button>
         <button onclick="onWellTestingDeletePoolClick()">Delete Pool</button>
+        <br>
+        <button id='back' onclick="onWellTestingBackClick()">BACK</button>
     </body>
     </html>`;
       res.write(tail);
@@ -1275,7 +1275,6 @@ function editmode_TestBarcodes(req, res) {
   h3 {
     text-align: center;
 }
-
 body {
     font-family: Arial, Helvetica, sans-serif;
     text-align: center;
@@ -1283,7 +1282,6 @@ body {
     justify-content: center;
     font-style: bold;
 }
-
 input[type=text] {
     width: 300px;
     height: 40px;
@@ -1291,7 +1289,6 @@ input[type=text] {
     box-sizing: border-box;
     align-items: center;
 }
-
 select {
     border: 4px solid #000000;
     box-sizing: border-box;
@@ -1304,7 +1301,6 @@ select {
     margin: 8px 0;
     cursor: pointer;
 }
-
 input[type=submit] {
     background-color: white;
     color: black;
@@ -1317,8 +1313,6 @@ input[type=submit] {
     width: 60;
     height: 30;
 }
-
-
 table {
     width: 600px;
     border-collapse: collapse;
@@ -1326,13 +1320,11 @@ table {
     justify-content: center;
     margin: 0 auto;
 }
-
 .class1{
     align-items: center;
     justify-content: center;
     /*display: inline-block; */
 }
-
 .class2 {
     width: 700px;
     border: 4px solid #000000;
@@ -1340,25 +1332,21 @@ table {
     justify-content: center;
     margin: auto;
 }
-
 th,
 td {
     padding: 5px 7px;
     font-weight: bold;
 }
-
 #existingPools th, #existingPools td{
     border: 4px solid #000000;
     border-collapse: collapse;
 }
-
 input[type=checkbox] {
     border: 4px solid #000000;
     box-sizing: border-box;
     margin: 5px;
     align-items: center;
 }
-
 button {
     width: 150px;
     background-color: white;
@@ -1492,7 +1480,6 @@ span{
                 };
                 function onSubmitPoolClick() {
                     var poolBarcode = document.querySelector("#poolBarcode").value;
-
                     console.log(poolBarcode);
                     var poolBarcodeTable = document.getElementById("pool");
                     var rowLength = poolBarcodeTable.rows.length;
