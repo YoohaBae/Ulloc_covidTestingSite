@@ -518,7 +518,7 @@ function writeTestCollection(req, res) {
                       const email = urlParams.get('email');
                       const password = urlParams.get('password');
                       location.href = "/labtech?email="+email+"&password="+password;
-                      }
+                    };
                       
                 </script>
         </head>
@@ -931,7 +931,7 @@ function writePoolMapping(req, res) {
                   const urlParams = new URLSearchParams(window.location.search);
                   const email = urlParams.get('email');
                   const password = urlParams.get('password');
-                  location.href = "/labetech?email="+email+"&password="+password;
+                  location.href = "/labtech/labHome?email="+email+"&password="+password;
                 };
             </script>
             </html>`;
@@ -1082,7 +1082,7 @@ function writeWellTesting(req, res) {
       const urlParams = new URLSearchParams(window.location.search);
       const email = urlParams.get('email');
       const password = urlParams.get('password');
-      location.href = "/labetch?email="+email+"&password="+password;
+      location.href = "/labtech/labHome?email="+email+"&password="+password;
     };
       
 </script>
@@ -1392,14 +1392,15 @@ span{
     };
   </script>
   <body>
-  <h1>
+  <h3>
             Pool Mapping
-        </h1>
+        </h3>
         <b>Pool Barcode: </b>
         <input type="text" name="search" value="${poolBarcode}" id="poolBarcode">
         <br>
-        <b>Test Barcodes: </b>
-        <table id='pool'>
+        <span>Test Barcodes: </span>
+        <span class='class2'>
+            <table id='pool'>
         `;
   let body = "";
   for (let i = 0; i < testBarcodeArray.length; i++) {
@@ -1416,6 +1417,7 @@ span{
   let body2 = `
         </table>
         <button onclick="onAddMoreRowsClick()">Add more rows</button><br><br>
+        </span>
         <button onclick="EditTestBarcodesDB()">Submit Pool</button>
         <br>
         <br>
@@ -1466,6 +1468,7 @@ span{
     `</table>
       <button>Edit Pool</button>
       <button>Delete Pool</button>
+      <br><button id='back' onclick="onTestCollectionBackClick()">BACK</button>
         </body >
       <script>
         var index, table = document.getElementById('pool');
@@ -1534,6 +1537,12 @@ span{
                         }
                     }
                     location.href = "/labtech/poolMapping?email=" + email + "&password=" + password;
+                };
+                function onTestCollectionBackClick() {
+                  const urlParams = new URLSearchParams(window.location.search);
+                  const email = urlParams.get('email');
+                  const password = urlParams.get('password');
+                  location.href = "/labtech?email="+email+"&password="+password;
                 };
             </script>
             </html > `
@@ -1812,6 +1821,8 @@ height: 50;
         </table>
         <button>Edit Pool</button>
         <button>Delete Pool</button>
+        <br>
+        <button id='back' onclick="onWellTestingBackClick()">BACK</button>
     </body>
     </html>`;
     res.write(html);
