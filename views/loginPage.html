@@ -36,6 +36,11 @@
                 cursor: pointer;
                 font-style: bold;
             }
+            #back{
+            margin-top: 10rem;
+            width: 100;
+            height: 50;
+        }
         </style>
     </head>
     
@@ -50,6 +55,8 @@
     
             <button type="button" onclick= "onLoginCollectorClick()"><b>Login Collector</b></button>
             <button type="button" onclick="location.href='/labtech/labHome'"><b>Lab Login</b></button>
+            
+            <br><button id='back' onclick="location.href='/'">BACK</button>
         </div>
         <script>
             function onLoginCollectorClick() {
