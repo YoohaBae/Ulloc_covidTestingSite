@@ -1,40 +1,151 @@
 <html>
+<style>
+    h3 {
+        text-align: center;
+    }
+
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        text-align: center;
+        align-items: center;
+        justify-content: center;
+        font-style: bold;
+    }
+
+    input[type=text] {
+        width: 300px;
+        height: 40px;
+        border: 4px solid #000000;
+        box-sizing: border-box;
+        align-items: center;
+    }
+
+    select {
+        border: 4px solid #000000;
+        box-sizing: border-box;
+        width: 200;
+        height: 50;
+        font-size: 15px;
+        font-weight: bold;
+        color: black;
+        padding: 12px 12px;
+        margin: 8px 0;
+        cursor: pointer;
+    }
+
+    input[type=submit] {
+        background-color: white;
+        color: black;
+        border: 4px solid #000000;
+        cursor: pointer;
+        font-size: 15px;
+        font-weight: bold;
+        text-align: center;
+        vertical-align: middle;
+        width: 60;
+        height: 30;
+    }
+    
+
+    table {
+        width: 600px;
+        border-collapse: collapse;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+    }
+
+    .class1{
+        align-items: center;
+        justify-content: center;
+        /*display: inline-block; */
+    }
+
+    .class2 {
+        width: 700px;
+        border: 4px solid #000000;
+        align-items: center;
+        justify-content: center;
+        margin: auto;
+    }
+
+    th,
+    td {
+        padding: 5px 7px;
+        font-weight: bold;
+    }
+
+    #existingPools th, #existingPools td{
+        border: 4px solid #000000;
+        border-collapse: collapse;
+    }
+
+    input[type=checkbox] {
+        border: 4px solid #000000;
+        box-sizing: border-box;
+        margin: 5px;
+        align-items: center;
+    }
+
+    button {
+        width: 150px;
+        background-color: white;
+        color: black;
+        padding: 7px 7px;
+        border: 4px solid #000000;
+        cursor: pointer;
+        text-align: left;
+        font-weight: bold;
+        font-size: 15px;
+    }
+    span{
+        display:inline-block;
+        font-weight: bold;
+        margin;
+    }
+</style>
 
 <body>
-    <h1>
+    <h3>
         Pool Mapping
-    </h1>
+    </h3>
     <b>Pool Barcode: </b>
-    <input type="text" name="search" value="">
+    <input type="text" name="search" value=""><br>
     <br>
-    <b>Test Barcodes: </b>
-    <table id='pool'>
-        <tr>
-            <td>
-                <input type="text" name="code" value="">
-            </td>
-            <td>
-                <button type='button' onclick='delete(this);' class='btn btn-default'>Delete</button>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <input type="text" name="code" value="">
-            </td>
-            <td>
-                <button type='button' onclick='delete(this);' class='btn btn-default'>Delete</button>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <input type="text" name="code" value="">
-            </td>
-            <td>
-                <button type='button' onclick='delete(this);' class='btn btn-default'>Delete</button>
-            </td>
-        </tr>
-    </table>
-    <button onclick="addMoreRows()">Add more rows</button><br><br>
+    <!-- <span class='class1'> -->
+        <span>Test Barcodes: </span>
+        <span class='class2'>
+            <table id='pool'>
+                <tr>
+                    <td>
+                        <input type="text" name="code" value="">
+                    </td>
+                    <td>
+                        <button type='button' onclick='delete(this);' class='btn btn-default'>Delete</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="text" name="code" value="">
+                    </td>
+                    <td>
+                        <button type='button' onclick='delete(this);' class='btn btn-default'>Delete</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="text" name="code" value="">
+                    </td>
+                    <td>
+                        <button type='button' onclick='delete(this);' class='btn btn-default'>Delete</button>
+                    </td>
+                </tr>
+            </table>
+            <button onclick="addMoreRows()">Add more rows</button><br><br>
+        </span>
+    <!-- </span> -->
+    <br>
+    <br>
     <button>Submit Pool</button>
     <br>
     <br>
@@ -42,35 +153,22 @@
         <tr>
             <td>
             </td>
-            <td>
-                Test Barcodes
-            </td>
+            <td>Test Barcodes</td>
         </tr>
         <tr>
-            <td>
-                <label><input type="checkbox">111</label>
-            </td>
-            <td>
-                123, 456, 789
-            </td>
+            <td><label><input type="checkbox">111</label></td>
+            <td>&nbsp 123, 456, 789</td>
         </tr>
         <tr>
-            <td>
-                <label><input type="checkbox">222</label>
-            </td>
-            <td>
-                876, 873
-            </td>
+            <td><label><input type="checkbox">222</label></td>
+            <td>&nbsp 876, 873</td>
         </tr>
         <tr>
-            <td>
-                <label><input type="checkbox">333</label>
-            </td>
-            <td>
-                734, 112
-            </td>
+            <td><label><input type="checkbox">333</label></td>
+            <td>&nbsp 734, 112</td>
         </tr>
     </table>
+    <br>
     <button>Edit Pool</button>
     <button>Delete Pool</button>
 </body>
