@@ -1250,36 +1250,46 @@ function writeEmployeeResults(req, res) {
               </tr>`;
   let query = url.parse(req.url, true).query;
   let email = query.email ? query.email : "";
+  //get employeeID from email logged in
   let employeedb = connection.query(
     "SELECT employeeID, email FROM employee WHERE email = ?",
     [email]
   );
   let employeeID = employeedb[0].employeeID;
+  //get employee's testBarcode with his employeeID
   let employeetestdb = connection.query(
     "SELECT testBarcode, employeeID, collectionTime FROM employeetest WHERE employeeID = ?",
     [employeeID]
   );
   console.log(employeetestdb);
-  for (i = 0; i < employeetestdb.length; i++) {
-    let testBarcode = employeetestdb[i].testBarcode;
-    console.log(testBarcode);
-    let collectionTime = employeetestdb[i].collectionTime;
-    console.log(collectionTime);
-    let poolmapdb = connection.query(
-      "SELECT testBarcode, poolBarcode FROM poolmap WHERE testBarcode = ?",
-      [testBarcode]
-    );
-    console.log(poolmapdb);
-    let poolmapLength2 = poolmapdb.length;
-    console.log("pool map length: " + poolmapLength2);
-    let poolBarcode = poolmapdb[poolmapLength2 - 1].poolBarcode;
+  let testBarcode = employeetestdb[0].testBarcode;
+  console.log(testBarcode);
+  let collectionTime = employeetestdb[0].collectionTime;
+  console.log(collectionTime);
+  //get poolBarcodes that the employee's testBarcode are in 
+  let poolmapdb = connection.query(
+    "SELECT testBarcode, poolBarcode FROM poolmap WHERE testBarcode = ?",
+    [testBarcode]
+  );
+  console.log(poolmapdb);
+  //number of pools that the employee is in 
+  let poolsIamIN = poolmapdb.length;
+  console.log("I am in: " + poolsIamIN);
+
+  for (let i = 0; i < poolsIamIN; i++) {
+    //go from the first pool
+    let poolBarcode = poolmapdb[i].poolBarcode;
     console.log(poolBarcode);
+
+    //find how many testBarcodes are in this pool. This will be used to determine positive / in progress
     let poolmapLength = connection.query(
       "SELECT poolBarcode FROM poolmap WHERE poolBarcode = ?",
       [poolBarcode]
     );
-    let poolLength = poolmapLength.length;
-    console.log("pool length: " + poolLength);
+    let INwith = poolmapLength.length;
+    console.log("I am in this pool with: " + INwith);
+
+    //get the well that this pool is tested
     let welltestingdb = connection.query(
       "SELECT poolBarcode, result FROM welltesting WHERE poolBarcode = ?",
       [poolBarcode]
@@ -1288,20 +1298,23 @@ function writeEmployeeResults(req, res) {
     let result = welltestingdb[0].result;
     html +=
       `
-      <tr>
-        <td>` +
+        <tr>
+          <td>` +
       collectionTime +
       `</td>`;
-    if (poolLength == 1 && result == 'Positive') {
+
+    //if the well was positive and I was in the pool solely,
+    if (INwith == 1 && result == 'Positive') {
       html += `<td> Positive </td><tr>`;
     }
+    //negative is always negative
     else if (result == 'Negative') {
       html += `<td> Negative </td><tr>`;
     }
+    //else, the well is in prgress or slpited into half and testing again
     else {
       html += `<td> In progress </td></tr>`
     }
-
   }
   res.write(html + `\n\n</table></body>\n</html>`);
   res.end();
@@ -1774,7 +1787,7 @@ function writeBarcode(req, res) {
   let password = query.password ? query.password : "";
   //let currentTime = GETDATE();
   //console.log(currentTime);
-  let sql = `INSERT INTO employeetest(testBarcode, employeeID, collectionTime, collectedBy) VALUES('${testBarcode}', '${employee}', CURDATE(), '${labID}')`;
+  let sql = `INSERT INTO employeetest(testBarcode, employeeID, collectionTime, collectedBy) VALUES('${testBarcode}', '${employee}', NOW(), '${labID}')`;
   con.query(sql, function (err, result) {
     if (err) throw err;
     console.log("1 record inserted");
@@ -2105,7 +2118,7 @@ function editWellBarcodes(req, res) {
     console.log("well updated");
   });
   let sql2 =
-    `UPDATE welltesting SET  testingEndTime = CURDATE() WHERE poolBarcode = "` +
+    `UPDATE welltesting SET  testingEndTime = NOW() WHERE poolBarcode = "` +
     poolBarcode +
     `";`;
   con.query(sql2, function (err, result) {
@@ -2166,7 +2179,7 @@ function writeWellBarcodes(req, res) {
   });
   //what is testingStartTime and testingEndTime
   //temporary
-  let sql2 = `INSERT INTO wellTesting(poolBarcode, wellBarcode, testingStartTime, testingEndTime, result) VALUES('${poolBarcode}', '${wellBarcode}', CURDATE(), CURDATE(), '${result}')`;
+  let sql2 = `INSERT INTO wellTesting(poolBarcode, wellBarcode, testingStartTime, testingEndTime, result) VALUES('${poolBarcode}', '${wellBarcode}', NOW(), NOW(), '${result}')`;
   con.query(sql2, function (err, result) {
     if (err) throw err;
     console.log("everything inserted into wellTesting");

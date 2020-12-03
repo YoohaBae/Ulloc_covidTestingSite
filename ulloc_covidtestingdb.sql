@@ -71,12 +71,12 @@ CREATE TABLE `employeetest` (
 --
 
 INSERT INTO `employeetest` (`testBarcode`, `employeeID`, `collectionTime`, `collectedBy`) VALUES
-('t1', '111', CURDATE(), 'ulloc1@gmail.com'),
-('t2', '222', CURDATE(), 'ulloc1@gmail.com'),
-('t3', '333', CURDATE(), 'ulloc1@gmail.com'),
-('t4', '444', CURDATE(), 'ulloc1@gmail.com'),
-('t5', '555', CURDATE(), 'ulloc1@gmail.com'),
-('t6', '666', CURDATE(), 'ulloc1@gmail.com');
+('t1', '111', NOW(), 'ulloc1@gmail.com'),
+('t2', '222', NOW(), 'ulloc1@gmail.com'),
+('t3', '333', NOW(), 'ulloc1@gmail.com'),
+('t4', '444', NOW(), 'ulloc1@gmail.com'),
+('t5', '555', NOW(), 'ulloc1@gmail.com'),
+('t6', '666', NOW(), 'ulloc1@gmail.com');
 
 
 -- --------------------------------------------------------
